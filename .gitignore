@@ -1,0 +1,36 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+logs/
+*-adapter/
+smoke-*-adapter/
+synthetic_corpus/
+requirements-*.lock.txt
+.DS_Store
+
+# real corpus payloads — keep the manifest (corpus.json), not the raw data
+data/*/xml/
+data/*/iob/
+
+# overnight run outputs
+results/
+
+# legacy NER project + extracted data + model weights (do NOT commit)
+prepare_data/
+prepare_data_latest/
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# transient run artefacts / shareable bundles
+*.zip
+arm_comparison*.txt
+results_for_claude*
+
+# secrets — belt and braces (also line 1)
+.env
+*.env
+.env.*

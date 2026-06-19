@@ -1,0 +1,29 @@
+# Local (macOS / Linux, CPU) stack for the "good detail" smoke test.
+# ----------------------------------------------------------------------
+# No CUDA, no bitsandbytes. On macOS, `pip install torch` gives the
+# native build (MPS on Apple Silicon; CPU on Intel). The smoke test runs
+# on CPU, which is fine for a 0.5B model + LoRA + 20 steps.
+#
+# Use Python 3.10 or 3.11 (system python 3.9 on older macOS may be too old).
+# After a green run, freeze: pip freeze > requirements-local.lock.txt
+# ----------------------------------------------------------------------
+
+torch>=2.6           # GRPO trainer (current TRL) needs FSDPModule/FSDP2 -> torch>=2.6
+transformers>=4.46
+trl>=1.0.0
+peft>=0.13
+accelerate>=1.0
+datasets>=3.0
+
+# LLM-judge (#4) and v2 rendering backends (uva / ollama / gemini):
+requests>=2.31
+python-dotenv>=1.0
+
+# NLI faithfulness estimator (config.FAITHFULNESS_METHOD = "nli").
+# DeBERTa-v3 uses a SentencePiece tokenizer, so these are required for it.
+sentencepiece>=0.1.99
+protobuf>=3.20
+
+# DSPy extraction front-end (dspy_extract.py) — only needed to (re)build a fact
+# base from raw text. Pulls litellm; install when you run extraction.
+dspy-ai>=2.5
