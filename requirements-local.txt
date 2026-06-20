@@ -27,3 +27,7 @@ protobuf>=3.20
 # DSPy extraction front-end (dspy_extract.py) — only needed to (re)build a fact
 # base from raw text. Pulls litellm; install when you run extraction.
 dspy-ai>=2.5
+
+# Embedding retrieval (config.RETRIEVAL_METHOD = "embed") — optional; lexical is
+# the default and needs nothing. Install only to sharpen the source premise.
+sentence-transformers>=2.2

@@ -1,5 +1,10 @@
 # Methods — the reward functions, and why each is built the way it is
 
+> **Framing:** this project is the generative sequel to "The Occasional Bitter
+> Lesson" — for a *contested, generative* cultural target, scaling underperforms and
+> the theoretical lens (the rewards) becomes the method. See **`FRAMING.md`** for the
+> argument and how the project's results map onto that paper's pathology taxonomy.
+
 This document explains, for each reward in the pipeline, **what construct it is
 trying to measure, how it computes it, and what it is deliberately blind to.**
 It is the methods section a reader needs to understand the experiments in

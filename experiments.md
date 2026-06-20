@@ -212,9 +212,10 @@ less. Culture-blind vs situated rewards diverge most when the record is loose.
 documents* — not the same text. And the extracted path feeds short (~150-word)
 self-contained chunks as the premise vs the whole 27k-char document, so part of the
 `unsup` drop is chunk size, not relations. The isolating experiment — same chunks,
-relations on vs off (`realdata_generate.py --no_relations`) — is wired and pending. If
-relations-on beats relations-off on identical text, the fact base earns its keep free
-of the chunk-size confound. Provisional reading: **the extraction front-end lifts
+relations on vs off (`realdata_generate.py --relations`) — was then **run at scale and
+came up NULL** (see the next section), so relations were dropped from the grounding
+path; the gain is the focused source passages, not the triples. Provisional reading
+at the time: **the extraction front-end lifts
 grounding on real data, and the fact base — not the reward — is the dominant lever.**
 
 ### Inference-time track — reward-as-selector (the historian demo)
@@ -226,3 +227,55 @@ linguistic, and judge select *different* candidates is the thesis made legible w
 recognisable model — and it scales the comparison to "the newest LLM" without GRPO. See
 `methods_rewards.md §7` for the training-vs-selection framing. Run at scale with
 `run_ehri.sh` (trained arms, aggregate metrics); demo with `bestofn_demo.py`.
+
+### At scale (overnight run, N=150) — what held and what didn't
+
+The 2026-06-19 overnight sweep (extract 400 chunks, score 150/arm, GRPO-on-real
+arms, best-of-N) revises the N=3 reading honestly:
+
+1. **Source focus is the real lever.** Extracted/chunked source roughly halves
+   fabrication vs the XML entity-list path — unsup 6.7 → 4.2, F 0.43 → 0.59 —
+   robustly across every arm at N=150.
+2. **The relations ablation is NULL.** Relations on ≈ off (composite F 0.590 vs
+   0.600, unsup 4.19 vs 4.19; same for all arms). The gain is the *focused source
+   passages* (a better NLI premise), **not** the relation triples — consistent with
+   the extractor's relation-link F1 of only 0.40 (entities 0.78), i.e. the relations
+   are both noisy and unhelpful here. The earlier "the fact base is the lever" claim,
+   from N=3, was an overclaim the ablation caught.
+3. **The reward arms converge on real trained-policy output.** composite ≈ linguistic
+   ≈ human (extracted: F 0.590 / 0.591 / 0.589; unsup 4.19 / 4.43 / 4.17) — predicted
+   direction, negligible magnitude. **GRPO-on-real-prompts did not help** (composite
+   reward drifted −2.38 → −2.58 over 300 steps; the real-trained arm matches/under-
+   performs the synthetic one).
+
+**Conclusion.** The contribution lives at the **reward level** (discrimination on
+fixed text, validated on the synthetic grid) and in **inference-time selection**
+(best-of-N) — *not* in trained-policy differences, which do not transfer to real
+testimony at this scale. The trained-arm comparison is, at N=150, a near-null.
+
+### Best-of-N on a clean instruct model (mistral-small-3.2, real testimony)
+
+With a model that actually writes (gpt-oss-120b, a reasoning model, returned
+truncated/empty content; `mistral-small-3.2` via the uva proxy writes clean
+micro-narratives), the reward-as-selector result is the sharpest version of the
+thesis. On 5 real EHRI chunks, K=6 candidates each:
+
+- **The rewards diverged on 5/5 records** — the definition of "good detail" changes
+  which narrative wins, every time.
+- **The culture-blind/situated split is explicit on fluent prose:** linguistic
+  repeatedly selects the most surface-rich candidate that NLI marks *ungrounded*
+  (e.g. one at F=0.00, unsup=5; another at unsup=13), while composite selects the
+  hedged, faithful one (F=0.67; on another record F=0.86, unsup=1).
+- **The LLM judge saturates and cannot adjudicate:** mistral-as-judge scored almost
+  every candidate ~8/10 regardless of grounding (it rated an F=0.00 fabrication and an
+  F=0.86 grounded narrative the same). The RLAIF arbiter is near-useless here — the
+  "declares success whenever coherent" pathology, live (see `FRAMING.md`).
+- **Practical note:** the faithfulness gate at `unsup=0` passed 0/6 candidates on
+  real data (even good ones carry a borderline specific); `--gate_unsup 1` is the
+  usable default (now the default).
+
+This is also the **workshop material**: `bestofn_demo.py --save` dumps the scored
+candidate sets, `make_annotation_sheet.py` turns them into a blind browser form for
+historians, and `analyze_annotations.py` reports which reward best predicts the human
+ranking and how much historians agree — i.e. it turns "the rewards diverge" into
+"and here is whose definition of good detail the community holds" (P1, `NEXT_STEPS`).

@@ -1,5 +1,12 @@
 # Good Detail — project status & handover
 
+> ⚠️ **Dated snapshot (17 June 2026) — superseded.** The project has moved well beyond
+> this note: NLI faithfulness, the corpus-agnostic ingest layer, real EHRI data end to
+> end, the DSPy extraction front-end, at-scale results (N=150), inference-time best-of-N
+> selection, and the historian-workshop apparatus. **For the current state read
+> `experiments.md` (results), `FRAMING.md` (framing), and `NEXT_STEPS.md` (roadmap).**
+> Kept for history. (The folder is now `good-detail/`, not `For-Chloe/`.)
+
 **Date:** 17 June 2026
 **Folder:** `For-Chloe/` (this folder)
 **Purpose of this note:** remind future-me, in ~2 weeks, where the project stands and what to do next.

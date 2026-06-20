@@ -44,9 +44,10 @@ def _gen(model, messages, k, temperature, max_tokens):
     for _ in range(k):
         try:
             cands.append(J.chat(model, messages, max_tokens=max_tokens, temperature=temperature).strip())
-        except Exception as e:
-            cands.append(f"[generation error: {e}]")
-    return cands
+        except (Exception, SystemExit):   # a backend timeout/down must not kill the run
+            cands.append("")
+    # keep only real candidates (drop empty / reasoning-model truncations)
+    return [c for c in cands if len(c.split()) >= 4]
 
 
 def _judge_score(record, text, backend, model):
@@ -54,7 +55,7 @@ def _judge_score(record, text, backend, model):
     J._BACKEND = backend
     try:
         return float(J.judge(record, text, model=model)[0])
-    except Exception:
+    except (Exception, SystemExit):   # a rate-limited/down judge must not kill the demo
         return float("nan")
     finally:
         J._BACKEND = old
@@ -71,18 +72,26 @@ def main():
     ap.add_argument("--temperature", type=float, default=0.9, help="diversity across candidates")
     ap.add_argument("--max_tokens", type=int, default=220)
     ap.add_argument("--premise_sents", type=int, default=20)
-    ap.add_argument("--no_relations", action="store_true")
+    ap.add_argument("--relations", action="store_true",
+                    help="include extracted relations in the record block (off by default)")
     ap.add_argument("--no_redact", action="store_true")
+    ap.add_argument("--gate", action="store_true",
+                    help="deployable pick: keep only grounded candidates (unsup<=gate_unsup), "
+                         "then the richest — always shows a grounded narrative")
+    ap.add_argument("--gate_unsup", type=int, default=1,
+                    help="max unsupported specifics allowed past the gate (0 is too strict on real data)")
     ap.add_argument("--judge", action="store_true", help="add the LLM-judge reward as a third selector")
     ap.add_argument("--judge_backend", default="gemini")
     ap.add_argument("--judge_model", default=None)
+    ap.add_argument("--save", default=None,
+                    help="dump the scored candidate sets to JSON (workshop input for make_annotation_sheet.py)")
     args = ap.parse_args()
 
     J._BACKEND = args.gen_backend
     gen_model = args.gen_model or J.BACKENDS[args.gen_backend]["default_model"]
     judge_model = args.judge_model or J.BACKENDS[args.judge_backend]["default_model"]
     rewards = REWARDS + (["judge"] if args.judge else [])
-    wr = not args.no_relations
+    wr = args.relations
 
     recs = load_corpus(args.corpus, args.source, limit=args.limit)
     if not recs:
@@ -90,15 +99,21 @@ def main():
     print(f"Generation LLM: {args.gen_backend}/{gen_model}  |  K={args.k}  |  "
           f"rewards: {', '.join(rewards)}  |  relations: {'on' if wr else 'off'}")
     print(f"{_BANNER}\n")
+    saved = []   # structured candidate sets for the workshop (--save)
 
     diverged = 0
-    for rec in recs:
+    for ri, rec in enumerate(recs, 1):
         focal = rec.unit or rec.title
+        print(f"  [{ri}/{len(recs)}] {rec.id}: generating {args.k} candidates …", flush=True)
         excerpt = " ".join(retrieve(rec.source_text, focal, 8))
         record = record_block(rec, with_relations=wr) + ("\n\nSOURCE EXCERPT:\n" + excerpt if excerpt else "")
         messages = [{"role": "user", "content": INSTRUCTION.format(
             register=rec.register.replace("_", "-"), unit=focal, record=record)}]
         cands = _gen(gen_model, messages, args.k, args.temperature, args.max_tokens)
+        if not cands:
+            print("      no usable candidates (backend empty/down) — skipping record", flush=True)
+            continue
+        print(f"      scoring {len(cands)} usable candidates with the rewards …", flush=True)
 
         att_t, att_y = attested_index(rec, with_relations=wr)
         scored = []
@@ -112,10 +127,21 @@ def main():
             scored.append(row)
 
         picks = {r: max(range(len(scored)), key=lambda i: scored[i][r]) for r in rewards}
+        order = list(rewards)
+        if args.gate:
+            # the DEPLOYABLE pick: keep only grounded candidates (unsup <= gate_unsup),
+            # then choose the richest (highest linguistic). Fall back to least-bad (max F).
+            survivors = [i for i, s in enumerate(scored) if s["unsup"] <= args.gate_unsup]
+            gkey = f"grounded-gate(unsup<={args.gate_unsup})"
+            picks[gkey] = (max(survivors, key=lambda i: scored[i]["linguistic"]) if survivors
+                           else max(range(len(scored)), key=lambda i: scored[i]["F"]))
+            order.append(gkey)
+            print(f"  ({len(survivors)}/{args.k} candidates passed the faithfulness gate)")
+        rewards_iter = order
         unit_disp = focal if args.no_redact else "[unit]"
         print(f"=== {rec.id} — {unit_disp}  ({rec.title[:55]}…)  [{args.k} candidates] ===")
         seen = {}
-        for r in rewards:
+        for r in rewards_iter:
             i = picks[r]
             row = scored[i]
             tag = f"#{i}" + (f" (= {seen[i]})" if i in seen else "")
@@ -126,12 +152,37 @@ def main():
             js = f"  judge={row['judge']:+.2f}" if args.judge else ""
             print(f"    [F={row['F']:.2f} unsup={row['unsup']}  composite={row['composite']:+.2f}  "
                   f"linguistic={row['linguistic']:.2f}{js}]")
-        distinct = len(set(picks.values()))
+        distinct = len(set(picks[r] for r in rewards))   # divergence among the REWARDS (not the gate)
         if distinct > 1:
             diverged += 1
         print(f"\n  -> the rewards chose {distinct} DIFFERENT candidate(s) "
               f"{'— they disagree on what good detail is' if distinct > 1 else '— they agree here'}.")
         print(f"  [{_BANNER}]\n")
+
+        if args.save:
+            saved.append({
+                "id": rec.id, "title": rec.title,
+                "unit": focal if args.no_redact else "[unit]",
+                "register": rec.register,
+                "record_block": record,
+                "prompt_user": messages[0]["content"],   # exact instruction → lets the harness rebuild the training prompt
+                "picks": {k: int(v) for k, v in picks.items()},
+                "candidates": [
+                    {"i": i,
+                     "text": s["text"] if args.no_redact else _redact(s["text"], focal),
+                     "F": s["F"], "unsup": s["unsup"], "composite": s["composite"],
+                     "linguistic": s["linguistic"],
+                     **({"judge": s["judge"]} if args.judge else {})}
+                    for i, s in enumerate(scored)],
+            })
+
+    if args.save:
+        import json
+        json.dump({"corpus": args.corpus, "source": args.source, "gen_model": gen_model,
+                   "k": args.k, "records": saved},
+                  open(args.save, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        print(f"Saved {len(saved)} candidate sets -> {args.save}  "
+              f"(feed to: python make_annotation_sheet.py {args.save})")
 
     print(f"Rewards diverged on {diverged}/{len(recs)} records "
           f"(higher = the definition of 'good detail' changes which narrative wins).")

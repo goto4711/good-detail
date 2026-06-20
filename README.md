@@ -9,12 +9,15 @@ testimony is the example corpus; the workflow is meant to generalise.
 results, the reward-functions reference, and the real-run profile. This README is
 just the map and the commands.
 
-**Guides:** `experiments.md` (the 3+1 reward conditions and how to run/compare them) ·
-`methods_rewards.md` (why & how each reward is built — the methods section, incl. the
-pluggable NLI faithfulness and the circularity/validity argument) · `DIALS.md` (every
-knob you can turn — flags + the keyword lists/weights/prompts and where they live) ·
-`overview_for_historians.md` (plain-language briefing for non-technical historians &
-archivists).
+**Guides:** `FRAMING.md` (the intellectual framing — the "occasional bitter lesson"
+generatively; read this first) · `experiments.md` (the 3+1 reward conditions and how
+to run/compare them) · `methods_rewards.md` (why & how each reward is built — the
+methods section, incl. the pluggable NLI faithfulness and the circularity/validity
+argument) · `DIALS.md` (every knob you can turn — flags + the keyword
+lists/weights/prompts and where they live) · `TRAINING_DATA.md` (how to create the
+training data — the reward / human-rated / historian-authored routes, the existing-data
+landscape, and the safeguards) · `overview_for_historians.md`
+(plain-language briefing for non-technical historians & archivists).
 
 ## Run it
 
@@ -50,18 +53,30 @@ the judge / v2 rendering: **ollama** (local, no key), **vllm** (local GPU server
 | synthetic data + rendering grid | `generate_synthetic_corpus.py` |
 | TEI/IOB serialise + ingest (adapters) | `emit_tei_iob.py`, `ingest_adapters.py` |
 | **corpus-agnostic ingest** (one `Record`, per-format adapters) | **`ingest/`** (`tei_ehri`, `iob_jsonl`, `synthetic`) + `data/<CORPUS>/corpus.json` |
-| **real-data shakedown** (generate + score any corpus) | `realdata_generate.py` (`--corpus EHRI --source xml\|iob`) |
+| **real-data shakedown** (generate + score any corpus) | `realdata_generate.py` (`--corpus EHRI --source xml\|iob\|extracted`) |
+| **extraction front-end** (raw text → entities, entity-only by default) | `dspy_extract.py` · `validate_extraction.py` |
+| **inference-time selection** (any LLM writes K, rewards pick) | `bestofn_demo.py` (the historian demo) |
+| **historian workshop apparatus** | `make_annotation_sheet.py` (blind form) → `analyze_annotations.py` (reward-vs-human) |
+| source-passage retrieval (lexical / embedding) | `retrieval.py` (`config.RETRIEVAL_METHOD`) |
 | v2: LLM rendering + grounding-verify | `llm_render.py` |
 | rewards | `linguistic_reward.py`, `composite_reward.py`, `human_reward.py`, `llm_judge_reward.py`, `faithfulness.py` (lexical/nli/llm) |
-| training | `sft_narrative.py` → `dpo_kto_train.py` / `grpo_train.py` |
-| orchestration | `run_pipeline.py`, `test_pipeline.sh`, `run_all.sh` |
+| training | `sft_narrative.py` → `dpo_kto_train.py` / `grpo_train.py` (`--prompts corpus:…` for real-data GRPO) |
+| orchestration | `run_pipeline.py`, `test_pipeline.sh`, `run_all.sh`, `run_ehri.sh`, `run_overnight.sh` |
 
 ## What's done vs. not
 
-Done (prototype/smoke level): the whole pipeline runs end to end on synthetic data —
-all four reward arms + the LLM judge, SFT → DPO/KTO → GRPO with guards, the v2
-grounding-verified renderer, and the two-arm + persona-pluralism comparison.
+Done: the full pipeline on synthetic data (four reward arms + LLM judge, SFT →
+DPO/KTO → GRPO with guards, NLI faithfulness); **real EHRI data** end to end (ingest,
+DSPy extraction front-end, grounded generate + score, real-prompt GRPO); the
+at-scale sweep (N=150); and the inference-time best-of-N selection on a clean instruct
+model. Headline findings live in `experiments.md`; the framing in `FRAMING.md`.
 
-Not done (the research): GPU learning runs at scale, **real corpora** + an NLI
-faithfulness estimator, **real concreteness norms** (`concreteness_norms.csv`), and
-validating the LLM judge against **real historians**. See the status doc.
+Key results (see `experiments.md`): the rewards discriminate and *disagree* (composite
+good>fab 16/16 vs linguistic 4/16; corr(linguistic, NLI-F) ≈ −0.34); trained-policy
+differences **converge** at scale (a near-null) while reward-as-selector **diverges**
+(5/5 records); source focus, not relations, drives grounding (relations dropped).
+
+Not done (the research): the **historian workshop** (apparatus built — see `NEXT_STEPS`
+P1; this is the missing ground-truth data), validating the faithfulness estimator and
+LLM judge against those human judgments, and **real concreteness norms**
+(`concreteness_norms.csv`).

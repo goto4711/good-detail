@@ -53,21 +53,28 @@ def make_lm(backend, model=None):
 
 
 # ---------------------------------------------------------------- the program
-def build_extractor():
+def build_extractor(relations=False):
+    """Entity-only by default — the objective is text summaries, and the overnight
+    ablation showed extracted relations add nothing to grounding (and are ~0.40 F1).
+    `relations=True` restores entity+relation extraction (analysis only / heavier)."""
     import dspy
 
+    if relations:
+        out_desc = ("JSON object with keys 'entities' and 'relationships'. "
+                    "entities: list of {entity_text, entity_type}. "
+                    "relationships: list of {relation_type, head_entity_text, tail_entity_text}. "
+                    "relation_type is a descriptive verb phrase (e.g. located_in, imprisoned_at).")
+    else:
+        out_desc = ("JSON object with key 'entities': a list of "
+                    "{entity_text, entity_type}. Entities only — no relationships.")
+
     class Extraction(dspy.Signature):
-        """Extract EVERY entity and the relationships between them from a
-        historical document (testimony, record, news report). Use only the given
-        entity types. Return strict JSON. Do not invent facts not in the text."""
+        """Extract EVERY entity from a historical document (testimony, record, news
+        report). Use only the given entity types. Return strict JSON. Do not invent
+        anything not in the text."""
         document_text: str = dspy.InputField(desc="the source passage")
         entity_types: str = dspy.InputField(desc="comma-separated valid entity types")
-        extracted = dspy.OutputField(
-            desc="JSON object with keys 'entities' and 'relationships'. "
-            "entities: list of {entity_text, entity_type}. "
-            "relationships: list of {relation_type, head_entity_text, tail_entity_text}. "
-            "relation_type is a descriptive verb phrase (e.g. located_in, imprisoned_at, "
-            "arrested_by, reported_on_date).")
+        extracted = dspy.OutputField(desc=out_desc)
 
     class Extractor(dspy.Module):
         def __init__(self):
@@ -161,7 +168,7 @@ def compile_extractor(backend, gold_path, model=None, metric_name="entity_f1", m
         trainset.append(ex)
     print(f"Compiling on {len(trainset)} gold examples (metric={metric_name}) …")
     tele = BootstrapFewShot(metric=metric, max_bootstrapped_demos=max_demos)
-    compiled = tele.compile(build_extractor(), trainset=trainset)
+    compiled = tele.compile(build_extractor(relations=False), trainset=trainset)
     out = "extractor_compiled.json"
     compiled.save(out)
     print(f"Saved compiled extractor -> {out}")
@@ -177,7 +184,7 @@ def run(args):
     from ingest import load_corpus
 
     make_lm(args.backend, args.model)
-    extractor = build_extractor()
+    extractor = build_extractor(relations=args.relations)
     if args.load and os.path.exists(args.load):
         extractor.load(args.load)
         print(f"Loaded compiled extractor: {args.load}")
@@ -223,6 +230,9 @@ def main():
     ap.add_argument("--doc_limit", type=int, default=None, help="max source records to read")
     ap.add_argument("--limit", type=int, default=20, help="max chunks to extract (cost guard)")
     ap.add_argument("--load", default=None, help="a compiled extractor json to load")
+    ap.add_argument("--relations", action="store_true",
+                    help="also extract relations (OFF by default — entity-only; relations "
+                         "added nothing to grounding in the ablation)")
     # compile mode
     ap.add_argument("--compile", action="store_true", help="optimise the extractor on gold data")
     ap.add_argument("--gold", default="data/EHRI/iob/merged_intermediate_data.jsonl")

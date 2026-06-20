@@ -13,6 +13,30 @@ requirements-*.lock.txt
 # real corpus payloads — keep the manifest (corpus.json), not the raw data
 data/*/xml/
 data/*/iob/
+data/*/extracted*.jsonl
+
+# training data built from real records (may carry real names) — keep local, do NOT commit
+data/*/train/
+*/train/
+*candidates*.json
+records.json
+authoring.html
+annotation.html
+authored_*.json
+responses_*.json
+preference_pairs*.jsonl
+sft_*.jsonl
+
+# workshop scratch folders (real-name candidate texts, ratings, generated sheets) — local only
+annotate-historian/
+simulated-workshop-responses/
+*/responses/
+responses.zip
+
+# local tooling / OS / botched lockfile
+.claude/
+.DS_Store
+requirements-local.lock.
 
 # overnight run outputs
 results/

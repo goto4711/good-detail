@@ -93,8 +93,8 @@ echo; echo "===== 4. METRICS sweep (aggregate) ====="
       $PY realdata_generate.py --corpus EHRI --source "$SRC" --sft_adapter "$SFT" \
           --adapter "$A" --limit "$GEN_LIMIT" --summary || echo "(fail $A/$SRC)"
     done
-    echo; echo "----- arm=$A source=extracted --no_relations -----"
-    $PY realdata_generate.py --corpus EHRI --source extracted --no_relations --sft_adapter "$SFT" \
+    echo; echo "----- arm=$A source=extracted --relations (analysis: relations ON) -----"
+    $PY realdata_generate.py --corpus EHRI --source extracted --relations --sft_adapter "$SFT" \
         --adapter "$A" --limit "$GEN_LIMIT" --summary || echo "(fail $A/norel)"
   done
 } 2>&1 | tee "$R/04_metrics.txt"
@@ -103,6 +103,7 @@ echo; echo "===== 4. METRICS sweep (aggregate) ====="
 echo; echo "===== 5. HISTORIAN examples ====="
 echo "--- best-of-N (pluggable LLM = $GENBACKEND), the reward-as-selector demo ---"
 $PY bestofn_demo.py --corpus EHRI --source extracted --gen_backend "$GENBACKEND" \
+    --judge_backend "$GENBACKEND" \
     --k "$K" --limit "$EXAMPLE_LIMIT" --judge 2>&1 | tee "$R/05_examples_bestofn.txt" \
   || echo "(bestofn failed)"
 echo "--- trained-arm sample narratives (composite vs linguistic) ---"

@@ -60,8 +60,18 @@ def _sentences(source_text):
 
 
 def retrieve(source_text, query, k):
+    sents = _sentences(source_text)
+    from config import RETRIEVAL_METHOD
+    if RETRIEVAL_METHOD == "embed":
+        try:
+            from retrieval import embed_retrieve
+            hit = embed_retrieve(sents, query, k)
+            if hit is not None:
+                return hit
+        except Exception:
+            pass                      # fall back to lexical on any failure
     q = _toks(query)
-    return sorted(_sentences(source_text), key=lambda s: len(q & _toks(s)), reverse=True)[:k]
+    return sorted(sents, key=lambda s: len(q & _toks(s)), reverse=True)[:k]
 
 
 def attested_index(rec, with_relations=True):
@@ -97,8 +107,9 @@ def main():
     ap.add_argument("--premise_sents", type=int, default=20, help="source sentences as NLI premise")
     ap.add_argument("--max_new_tokens", type=int, default=160)
     ap.add_argument("--temperature", type=float, default=0.0)
-    ap.add_argument("--no_relations", action="store_true",
-                    help="drop extracted relations from the record block (the ablation)")
+    ap.add_argument("--relations", action="store_true",
+                    help="include extracted relations in the record block "
+                         "(OFF by default — ablation showed they add nothing to grounding)")
     ap.add_argument("--no_redact", action="store_true", help="show the focal name (off by default)")
     ap.add_argument("--summary", action="store_true",
                     help="aggregate mode: suppress narratives, print per-record scores + a final MEAN row")
@@ -144,9 +155,9 @@ def main():
         label = f"{label}+{args.adapter}" if args.sft_adapter else args.adapter
     model.to(device).eval()
 
-    wr = not args.no_relations
+    wr = args.relations
     print(f"Device: {device} | model: {label} | corpus: {args.corpus}/{args.source or 'default'} "
-          f"| records: {len(recs)} | relations: {'on' if wr else 'OFF (ablation)'}")
+          f"| records: {len(recs)} | relations: {'on (analysis)' if wr else 'off (default)'}")
     print(f"{_BANNER}\n")
 
     agg = {"F": [], "unsup": [], "composite": [], "linguistic": [], "judge": []}

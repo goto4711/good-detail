@@ -122,3 +122,56 @@ How the pivot resolves it:
   operationalisation, not an oracle — see `methods_rewards.md` §4 and §6).
 - The historian **workshop** that makes the "human" arm genuinely independent of
   the automated rewards.
+
+## 5. Forward roadmap — how to get better results (2026-06-20)
+
+What the overnight run proved are **dead ends at this scale** (don't repeat):
+more GRPO training (synthetic *and* real-prompt both came up near-null), and more
+synthetic prompts (the reward-level findings never needed them). "Better results"
+is not a compute problem. Priorities, highest-leverage first:
+
+**P1 — the historian workshop (the unlock; not technical).** Every situated/human
+signal is still synthetic, so "whose good detail?" is asserted, not shown. ~30
+records × 3–4 candidate narratives (strong model) × 4–5 historians rank/rate them.
+One dataset yields: (a) ground truth to validate **which automated reward best
+predicts human judgment** (the headline), (b) a real human arm, (c) measured
+pluralism (do historians disagree?), (d) preference data for real DPO if wanted.
+*Apparatus BUILT (2026-06-20):* `bestofn_demo.py --save` dumps scored candidate sets
+→ `make_annotation_sheet.py` builds a blind, self-contained browser form (shuffled
+candidates, ratings, notes, download-as-JSON; no scores shown) → `analyze_annotations.py`
+reports inter-annotator agreement + each reward's Spearman correlation with the human
+ranking + per-record top-pick agreement. So P1 is now *run the workshop*, not *build it*.
+
+**P2 — cheap technical wins — BUILT (2026-06-20).**
+- *Faithfulness-gated best-of-N* — `bestofn_demo.py --gate` keeps only candidates with
+  `unsup ≤ gate_unsup` (default 1; `unsup=0` passed 0/6 on real data), then picks the
+  richest — so the shown output is always grounded. Deployable use of the reward, no training.
+- *Embedding retrieval for the NLI premise* — `retrieval.py` + `config.RETRIEVAL_METHOD="embed"`
+  (lexical stays the default; falls back gracefully if `sentence-transformers` absent).
+
+**P3 — strengthen the measurement.** Validate the NLI faithfulness estimator
+against the P1 annotations; add a second estimator (LLM claim-verifier) so
+faithfulness isn't single-method.
+
+**P4 — make inference-time selection the centre of gravity.** Trained policies
+converge, so the contribution is the reward-as-lens over current LLMs: bigger K,
+strongest models, evaluate selector quality vs human ranking (P1), report
+cross-reward disagreement at scale.
+
+**P5 — extraction/relations: DECIDED → drop (2026-06-20).** The objective is text
+summaries, not a knowledge graph; the ablation was null and relation-F1 only 0.40.
+So relations are **off by default** everywhere now: `record_block(with_relations=False)`,
+`realdata_generate`/`bestofn_demo` need `--relations` to opt in, and `dspy_extract`
+is **entity-only** by default (`--relations` to restore). The "fact base" is now
+honestly *source passages + entities*. Relations remain available only as an
+optional analysis artifact (and `validate_extraction` still scores them, since
+that 0.40 is the evidence that justified dropping them).
+
+**P6 — rigour for the writeup.** CIs / multiple seeds on metrics; the
+RLAIF-pluralism sub-study (judge with 2–3 different models); write the **negative
+results** up plainly (policies converge; relations don't help; LLM judge biased).
+
+Suggested order: **P2 → P1 → P4/P6**, P5 a quick decision, P3 folded into P1.
+Through-line: the strength is **measurement/operationalisation of a contested
+construct, validated against real community judgment** — not training a model to
+write well.

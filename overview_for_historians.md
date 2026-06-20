@@ -54,7 +54,7 @@ This is why the project does not try to hand you a finished, "objective" definit
 
 - It does **not** treat invention as acceptable. Fabricated specifics are actively penalised; the goal is detail that is *grounded*, with uncertainty acknowledged rather than smoothed away.
 - It does **not** aim to replace the historian's reading. It aims to study, and eventually support, the act of writing grounded micro-histories — with people setting the standard.
-- It currently uses **entirely invented test data** — fictional people, places, and references. **No real testimony, no real victims, no real archive is involved yet.** Nothing we have produced so far makes any claim about actual history; the results are about the *method*.
+- The **method was developed entirely on invented test data** — fictional people, places, and references. We have since begun running it on **real EHRI early-testimony records**, but only as a *methods diagnostic*: every machine-written narrative is treated as **unverified**, names are redacted in routine output, samples are kept small and internal, and nothing produced is offered as a historical source or a claim about actual history. The results are about the *method* and its failure modes, not about the people in the records.
 - It treats sensitive material with restraint: the aim is faithful, non-sensational accounts, attentive to the dignity of the people in the records.
 
 ## Where you come in

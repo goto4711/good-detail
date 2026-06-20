@@ -1,6 +1,12 @@
 # From Profile to Narrative: Reward Models for "Good Detail" in Historical Archives
 
-> **Status (17 June 2026):** much of the workflow proposed below is now prototyped on synthetic data — TEI/IOB serialisers + ingestion adapters, a decomposable linguistic reward, a faithfulness-gated composite reward, and a guarded GRPO loop (open-book prompts, length + anti-copy guards) that runs end to end on a MacBook. For the live build status, the latest results, the reward-functions reference, and the real-run profile, see **`PROJECT_STATUS_2026-06-17.md`** — that file is the source of truth; this document is the conceptual rationale.
+> **Status (17 June 2026; superseded — kept as the original conceptual rationale).**
+> The workflow described below is built and has since run end to end on **real EHRI
+> data**, with NLI faithfulness, an extraction front-end, at-scale results, and an
+> inference-time selection demo. For the **current** results, framing, and roadmap see
+> **`experiments.md`**, **`FRAMING.md`**, and **`NEXT_STEPS.md`** (these, not the older
+> `PROJECT_STATUS_2026-06-17.md`, are now the source of truth). This document remains
+> useful as the conceptual motivation.
 
 **Project update / research design — June 2026**
 **Corpus:** EHRI early Holocaust testimonies (Wiener Library) and other historical/archival sites

@@ -43,12 +43,26 @@ HERE = Path(__file__).parent
 OUT = HERE / "sft-narrative-adapter"
 
 
-def build_sft_dataset(source="template", tok=None):
+def build_sft_dataset(source="template", tok=None, data=None):
     """(record prompt -> good micro-narrative) pairs, prompt format == GRPO's.
     `tok` applies the model's chat template (native EOS); pass it for the real
     run so the SFT prompts match what GRPO/generate feed. source='llm' uses the
     v2 grounding-verified renderings (llm_render.py), falling back to templated
-    'good' for any cell not present."""
+    'good' for any cell not present. source='jsonl' loads an EXTERNAL
+    {prompt, completion} file built by build_training_data.py (real-corpus targets,
+    reward- or historian-labelled) — prompts are already in GRPO format, used as-is."""
+    if source == "jsonl":
+        if not data:
+            raise SystemExit("--source jsonl needs --data <file.jsonl>")
+        rows = []
+        for line in open(data, encoding="utf-8"):
+            if line.strip():
+                d = json.loads(line)
+                rows.append({"prompt": d["prompt"], "completion": d["completion"]})
+        if not rows:
+            raise SystemExit(f"No rows in {data}")
+        print(f"Loaded {len(rows)} external SFT targets from {data}.")
+        return rows
     llm = {}
     if source == "llm":
         path = HERE / "synthetic_corpus" / "llm_renderings.jsonl"
@@ -73,7 +87,7 @@ def build_sft_dataset(source="template", tok=None):
 
 
 def dry_run(args):
-    ds = build_sft_dataset(args.source)
+    ds = build_sft_dataset(args.source, data=args.data)
     print(f"SFT dataset ({args.source} targets): {len(ds)} (record -> good narrative) pairs.")
     print(f"  prompt chars   : min {min(len(r['prompt']) for r in ds)}, "
           f"median {int(statistics.median(len(r['prompt']) for r in ds))}, "
@@ -120,7 +134,7 @@ def real_run(args):
     # model never emits an end token in this prompt format and rambles to the
     # length cap (clipped_ratio=1), which swamps the GRPO reward with the length
     # penalty and prevents any arm from showing grounded behaviour.
-    rows = build_sft_dataset(args.source, tok)
+    rows = build_sft_dataset(args.source, tok, data=args.data)
     for r in rows:
         if not r["completion"].rstrip().endswith(tok.eos_token):
             r["completion"] = r["completion"].rstrip() + tok.eos_token
@@ -153,8 +167,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     from config import DEFAULT_MODEL
     ap.add_argument("--model", default=DEFAULT_MODEL)
-    ap.add_argument("--source", choices=["template", "llm"], default="template",
-                    help="SFT targets: templated 'good', or v2 grounding-verified (llm_render.py)")
+    ap.add_argument("--source", choices=["template", "llm", "jsonl"], default="template",
+                    help="SFT targets: templated 'good', v2 grounding-verified (llm_render.py), "
+                         "or 'jsonl' = external file from build_training_data.py (use with --data)")
+    ap.add_argument("--data", default=None, help="external {prompt,completion} jsonl for --source jsonl")
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--cpu", action="store_true")

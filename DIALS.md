@@ -56,6 +56,17 @@ BACKEND=vllm MODEL=Qwen/Qwen2.5-7B-Instruct V2_LIMIT=8 PYTHON=python bash run_al
 | `--seed` | 42 | reproducibility |
 | `--model` | from `config.DEFAULT_MODEL` | the model being trained |
 
+**Real-data & inference-time** (no synthetic CASES):
+
+| script | key flags |
+|---|---|
+| `realdata_generate.py` | `--corpus EHRI --source xml\|iob\|extracted`, `--adapter`, `--sft_adapter`, `--summary` (aggregate metrics), `--relations` (off by default), `--judge` |
+| `bestofn_demo.py` (the historian demo) | `--gen_backend/--gen_model` (any LLM), `--k`, `--judge`, `--gate` + `--gate_unsup N` (always-grounded pick), `--save out.json`, `--no_redact` |
+| `dspy_extract.py` (front-end) | `--backend uva\|vllm\|gemini`, `--limit`, `--relations` (off = entity-only), `--compile` |
+| workshop | `make_annotation_sheet.py candidates.json -o form.html` → `analyze_annotations.py candidates.json responses/` (files OR a folder) |
+| `make_authoring_sheet.py` (gold front-door) | `--corpus EHRI --source extracted --limit N` (or `--from records.json`) → `authoring.html` + `records.json`. Historians WRITE the summary; collect `authored_*.json` |
+| `build_training_data.py` (data harness) | `candidates.json --label reward` (bootstrap now) / `--label human --responses responses/ --min_gap N` (gold ratings) / `--label authored --authored authored/` (historian-written summaries → SFT gold + human-vs-machine pairs). Emits `sft_<label>.jsonl` + `preference_pairs_<label>.jsonl` → feed `sft_narrative.py --source jsonl --data …` and `dpo_kto_train.py --pairs …`. Prints a join check (`N/M records rated`; ⚠ on ID / candidate-set mismatch). Dials: `--gate_unsup`, `--fab_unsup`, `--fab_F`, `--min_gap`, `--gate_human_chosen`, `--model`/`--no_chat_wrap` (prompt chat-wrapping), `--dry_run` |
+
 Other scripts: `sft_narrative.py --source template|llm --epochs N`; `dpo_kto_train.py
 --method dpo|kto --pairs <file>`; `llm_judge_reward.py --validate|--label|--mock --limit N
 --debug`; `llm_render.py --limit N --max-tries N`; `generate.py --adapter … --sft_adapter …`.
@@ -74,6 +85,7 @@ the NAME.
 | LLM backends / default models / retries | `BACKENDS`, `MAX_RETRIES`… (§2) |
 | **composite reward**: gate sharpness, penalties | `GAMMA`, `W_C`, `W_FAB`, `W_SENS` (§3) |
 | **how grounding F is estimated** (lexical/nli/llm) | `FAITHFULNESS_METHOD`, `NLI_MODEL`, `NLI_ENTAIL_THRESHOLD` (§3) |
+| **source-passage retrieval** (lexical/embed) | `RETRIEVAL_METHOD`, `EMBED_MODEL` (§3) |
 | **linguistic reward** feature weights | `WEIGHTS` (§3) |
 | **personas** — *whose "good"?* (add your own) | `PERSONAS` (§3) |
 | sensational / dramatic words (restraint) | `SENSATIONAL` (§4) |

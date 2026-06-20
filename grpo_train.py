@@ -2,7 +2,7 @@
 """
 grpo_train.py
 ================================================================
-GRPO smoke test for the "good detail" pipeline — the stage that trains the
+GRPO training for the "good detail" pipeline — the stage that trains the
 model directly against a REWARD FUNCTION (not preference pairs).
 
 Why this should hurt less than last time
@@ -16,7 +16,7 @@ Why this should hurt less than last time
    doesn't train". `linguistic_reward` is continuous and varies completion to
    completion, so there's always a learning signal. (--dry_run proves this
    below before you spend a GPU-hour.)
-3. KNOWN-GOOD STACK. Same TRL>=1.0 env the DPO/KTO smoke test already ran on.
+3. KNOWN-GOOD STACK. Same TRL>=1.0 env the DPO/KTO trainer already ran on.
 
 Reward signature (TRL>=1.0): def reward(completions, **kwargs) -> list[float].
 You may pass several; the total is their (weighted) sum. Here we use the

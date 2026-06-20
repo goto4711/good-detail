@@ -58,7 +58,7 @@ def main():
         sys.exit("DSPy not installed:  pip install dspy-ai")
 
     make_lm(args.backend, args.model)
-    ext = build_extractor()
+    ext = build_extractor(relations=True)   # score relations too (the diagnostic that justified dropping them)
     rows = [json.loads(l) for l in open(args.gold, encoding="utf-8") if l.strip()]
     rows = [d for d in rows if d.get("document_text")][:args.limit]
     if not rows:

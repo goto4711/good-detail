@@ -2,14 +2,16 @@
 """
 dpo_kto_train.py
 ================================================================
-Preference-optimisation smoke test for the "good detail" pipeline.
+Preference-optimisation training (DPO / KTO) for the "good detail" pipeline.
 
-Consumes synthetic_corpus/preference_pairs.jsonl (good vs flattened/fabricated)
-and runs a tiny DPO or KTO fine-tune of a small Qwen, using the TRL >= 1.0 API.
+Consumes a preference_pairs.jsonl of {prompt, chosen, rejected} — the synthetic
+good-vs-flattened/fabricated set, or a real one built by build_training_data.py
+(reward- / human- / authored-labelled) — and runs a DPO or KTO fine-tune of a
+small Qwen via the TRL >= 1.0 API.
 
-This is a SMOKE TEST: the goal is "does the loop run, does loss move, does the
-data map cleanly onto TRL's expected schema" -- NOT a real experiment. Use a
-handful of steps and a small model.
+Defaults are deliberately small (a handful of steps, a small model) so you can
+first confirm the loop runs and the data maps cleanly onto TRL's schema; scale up
+via --max_steps / --model for a real experiment.
 
 Two modes
 ---------
@@ -173,7 +175,7 @@ def real_run(pairs, args):
     # mismatched prompts/completions within the batch). DPO is fine with 1.
     batch_size = 2 if args.method == "kto" else 1
     common = dict(
-        output_dir=str(HERE / f"smoke-{args.method}-adapter"),
+        output_dir=str(HERE / f"{args.method}-adapter"),
         per_device_train_batch_size=batch_size,
         gradient_accumulation_steps=2,
         max_steps=args.max_steps,
@@ -203,10 +205,10 @@ def real_run(pairs, args):
     print(f"Dataset rows: {len(ds)}  | starting {args.method.upper()} ...")
     result = trainer.train()
     print("\nTraining metrics:", result.metrics)
-    out = HERE / f"smoke-{args.method}-adapter"
+    out = HERE / f"{args.method}-adapter"
     trainer.save_model(str(out))
     print(f"Saved adapter to: {out}")
-    print("Smoke test complete. (Loss should be finite and generally trending down.)")
+    print(f"{args.method.upper()} training complete. (Loss should be finite and generally trending down.)")
 
 
 # ----------------------------------------------------------------------

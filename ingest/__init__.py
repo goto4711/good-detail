@@ -70,13 +70,14 @@ def _uniq(seq):
     return out
 
 
-def record_block(rec, max_per_type=40, max_relations=20, max_subjects=20, with_relations=True):
-    """Canonical prompt context + structured grounding (generalises the synthetic
-    _record_block and the EHRI header block). Entities are the ATTESTED set: a
-    name in a generated narrative that is absent here (and from source_text) is a
-    candidate fabrication. Kept as inline prose, not a bulleted dump.
-    `with_relations=False` drops the relations line — the ablation that isolates
-    what the extracted relations contribute beyond the entity list."""
+def record_block(rec, max_per_type=40, max_relations=20, max_subjects=20, with_relations=False):
+    """Canonical prompt context + grounding = title + ENTITIES + provenance.
+    Entities are the ATTESTED set: a name in a generated narrative that is absent
+    here (and from source_text) is a candidate fabrication. Inline prose, not a
+    bulleted dump. Relations are OFF by default: the overnight ablation showed they
+    add nothing to grounding (and the extractor's relations are ~0.40 F1), and the
+    objective is text summaries, not a knowledge graph. `with_relations=True` adds
+    them back only as an optional analysis artifact."""
     lines = [f"Unit: {rec.unit or rec.title}"]
     if rec.title and rec.title != rec.unit:
         lines.append(f"Title: {rec.title}")

@@ -61,8 +61,8 @@ OUT=logs/ehri_sweep_$(date +%Y%m%d_%H%M).txt
           --adapter "$A" --limit "$GEN_LIMIT" --summary \
         || echo "(run failed: $A/$SRC)"
     done
-    echo; echo "----- arm=$A source=extracted --no_relations (ablation) -----"
-    $PY realdata_generate.py --corpus EHRI --source extracted --no_relations --sft_adapter "$SFT" \
+    echo; echo "----- arm=$A source=extracted --relations (analysis: relations ON) -----"
+    $PY realdata_generate.py --corpus EHRI --source extracted --relations --sft_adapter "$SFT" \
         --adapter "$A" --limit "$GEN_LIMIT" --summary \
       || echo "(run failed: $A/extracted/no_rel)"
   done

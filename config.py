@@ -61,6 +61,12 @@ NLI_ENTAIL_THRESHOLD = 0.5        # min entailment prob to count a claim as supp
 NLI_CONTRADICT_THRESHOLD = 0.5    # min contradiction prob to count a claim as fabricated
 NLI_MAX_PREMISE_CHARS = 2000      # truncate the record-as-premise to this many chars
 
+# Source-passage RETRIEVAL (the NLI premise / prompt excerpt). The overnight run
+# showed grounding hinges on focused source passages, so retrieval quality matters.
+#   "lexical" token overlap (default, no deps) · "embed" sentence-embedding cosine
+RETRIEVAL_METHOD = "lexical"
+EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # small, fast; used iff "embed"
+
 # Linguistic (surface) reward — per-feature weights:
 WEIGHTS = {
     "proper_noun_density": 1.0,
