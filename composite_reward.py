@@ -30,10 +30,11 @@ import math
 import re
 import statistics
 
+import config
 from linguistic_reward import features, STOPWORDS, WORD_RE
 
 # Reward weights + sensational lexicon live in config.py
-from config import SENSATIONAL, SENSATIONAL_EXEMPT_ATTESTED, GAMMA, W_C, W_FAB, W_SENS
+from config import SENSATIONAL
 # Faithfulness is now a PLUGGABLE estimator (lexical / nli / llm) in faithfulness.py.
 # Re-exported here so `from composite_reward import faithfulness` keeps working and
 # `composite_reward()` automatically uses whatever config.FAITHFULNESS_METHOD selects.
@@ -71,7 +72,7 @@ def _attested_sensational_stems(case=None, source_text=None):
 def sensationalism(text, case=None, source_text=None):
     words = [w.lower() for w in WORD_RE.findall(text)]
     attested = (_attested_sensational_stems(case=case, source_text=source_text)
-                if SENSATIONAL_EXEMPT_ATTESTED and (case is not None or source_text)
+                if config.SENSATIONAL_EXEMPT_ATTESTED and (case is not None or source_text)
                 else set())
     s = sum(1 for w in words if w in SENSATIONAL and _simple_stem(w) not in attested)
     return s / math.sqrt(max(1, len(words)))
@@ -81,7 +82,11 @@ def sensationalism(text, case=None, source_text=None):
 # Composite reward
 # ----------------------------------------------------------------------
 
-def composite_reward(text, case, gamma=GAMMA, w_c=W_C, w_fab=W_FAB, w_sens=W_SENS):
+def composite_reward(text, case, gamma=None, w_c=None, w_fab=None, w_sens=None):
+    gamma = config.GAMMA if gamma is None else gamma
+    w_c = config.W_C if w_c is None else w_c
+    w_fab = config.W_FAB if w_fab is None else w_fab
+    w_sens = config.W_SENS if w_sens is None else w_sens
     f = features(text)
     Q = statistics.mean(f[k] for k in Q_KEYS)
     C = f["calibration"]

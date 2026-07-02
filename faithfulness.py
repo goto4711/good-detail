@@ -218,6 +218,7 @@ _CLAUSE = re.compile(r",| who | which | where | and | but |;| until | after | be
 # careful renderings that cite sources more.
 _PROV = re.compile(r"\b(according to|registry records?|family testimony|the records?|"
                    r"the registry|the catalogue|the caption|the letter|is recorded)\b", re.I)
+_NO_SUBJECT_PREPEND = {"her", "his", "their", "she", "he", "they"}
 
 
 def split_claims(text, subject=None):
@@ -238,7 +239,10 @@ def split_claims(text, subject=None):
                 continue
             if words[-1].lower() in ("was", "were", "is", "are", "had", "has", "be", "been"):
                 continue                              # clause with no predicate ("X was")
-            p = f"{subject} {raw}" if (subject and not raw[:1].isupper()) else raw
+            lead = words[0].lower()
+            p = (f"{subject} {raw}" if (subject and not raw[:1].isupper()
+                                        and lead not in _NO_SUBJECT_PREPEND)
+                 else raw)
             out.append(p.rstrip(" ,.") + ".")
     return out
 
@@ -278,7 +282,7 @@ def _load_nli():
     if _NLI["pipe"] is not None:
         return _NLI["pipe"]
     try:
-        import torch  # noqa
+        import torch
         from transformers import (AutoModelForSequenceClassification,
                                   AutoTokenizer, pipeline)
     except ImportError as e:
@@ -286,7 +290,8 @@ def _load_nli():
                  f"Install: pip install -r requirements-local.txt  (also: sentencepiece)")
     tok = AutoTokenizer.from_pretrained(NLI_MODEL)
     mdl = AutoModelForSequenceClassification.from_pretrained(NLI_MODEL)
-    dev = 0 if (getattr(__import__("torch"), "cuda").is_available()) else -1
+    use_mps = getattr(torch.backends, "mps", None) is not None and torch.backends.mps.is_available()
+    dev = 0 if torch.cuda.is_available() else ("mps" if use_mps else -1)
     _NLI["pipe"] = pipeline("text-classification", model=mdl, tokenizer=tok,
                             device=dev, top_k=None)
     # map label names regardless of the model's index order
@@ -306,6 +311,8 @@ def _label_score(scores, label):
 def _has_invented_specific(claim, toks, years):
     """A capitalised non-stopword token or a 4-digit year NOT in the record =
     an invented specific (the lexical signal, reused to flag suspicious neutrals)."""
+    if len(claim.split()) < 5:
+        return False
     for i, w in enumerate(claim.split()):
         wt = w.strip(",.;:()[]'\"")
         if i > 0 and re.fullmatch(r"[A-Za-zÀ-ÿ]+", wt) and wt[0].isupper() \

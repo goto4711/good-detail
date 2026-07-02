@@ -39,6 +39,7 @@ import re
 import statistics
 from pathlib import Path
 
+import config
 HERE = Path(__file__).parent
 TOKEN_RE = re.compile(r"\w+|[^\w\s]", re.UNICODE)
 WORD_RE = re.compile(r"[A-Za-zÀ-ÿ]+")
@@ -127,15 +128,12 @@ FEATURES = {
     "calibration": calibration,
 }
 
-# per-feature weights live in config.py
-from config import WEIGHTS
-
-
 def features(text):
     return {name: fn(text) for name, fn in FEATURES.items()}
 
 
-def linguistic_reward(text, weights=WEIGHTS):
+def linguistic_reward(text, weights=None):
+    weights = config.WEIGHTS if weights is None else weights
     f = features(text)
     return round(sum(weights[k] * f[k] for k in f), 4)
 

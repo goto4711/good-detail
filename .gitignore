@@ -33,10 +33,10 @@ simulated-workshop-responses/
 */responses/
 responses.zip
 
-# local tooling / OS / botched lockfile
+# local tooling / OS / local lockfile
 .claude/
 .DS_Store
-requirements-local.lock.
+requirements-local.lock
 
 # overnight run outputs
 results/
