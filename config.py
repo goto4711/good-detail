@@ -97,6 +97,8 @@ SENSATIONAL = {   # dramatic/gratuitous words -> restraint penalty (composite)
     "smuggled", "shot", "burned", "burning", "blazing", "mob", "gunpoint",
     "seized", "vanished", "slaughtered", "brutally", "savagely", "deported",
 }
+SENSATIONAL_EXEMPT_ATTESTED = True  # when True, an attested sensational word in the source/premises
+                                    # does not count against restraint; leave on for real-data scoring
 HEDGES = {"probably", "perhaps", "seems", "seem", "believed", "believe",
           "reportedly", "apparently", "likely", "may", "might", "uncertain",
           "unconfirmed", "possibly", "around", "approximately", "thought",

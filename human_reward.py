@@ -63,7 +63,7 @@ def component_scores(text, case):
     F, n_unsup = faithfulness(text, case)
     has_src = any(w in low for w in SOURCE_WORDS) or \
         any(s["archive_ref"].lower() in low for s in case["sources"].values())
-    restraint = max(0.0, 1.0 - sensationalism(text))
+    restraint = max(0.0, 1.0 - sensationalism(text, case=case))
     return dict(coverage=coverage, specificity=specificity, grounding=F,
                 source=1.0 if has_src else 0.0, calibration=calibration,
                 restraint=restraint, unsup=n_unsup)

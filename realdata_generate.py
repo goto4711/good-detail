@@ -88,11 +88,11 @@ def _redact(text, focal):
     return re.sub(r"\[unit\](?:[,\s]+\[unit\])+", "[unit]", out)
 
 
-def _composite(text, F, unsup):
+def _composite(text, F, unsup, source_text=None):
     f = features(text)
     Q = sum(f[k] for k in Q_KEYS) / len(Q_KEYS)
     return round((F ** GAMMA) * (Q + W_C * f["calibration"]) - W_FAB * unsup
-                 - W_SENS * sensationalism(text), 3)
+                 - W_SENS * sensationalism(text, source_text=source_text), 3)
 
 
 def main():
@@ -184,7 +184,7 @@ def main():
         if is_unscoreable_status(faith_status):
             warnings.warn(f"{rec.id}: faithfulness unscoreable ({faith_status})", RuntimeWarning, stacklevel=1)
         ling = linguistic_reward(text)
-        comp = _composite(text, F, unsup)
+        comp = _composite(text, F, unsup, source_text=rec.source_text)
         jval = judge(record, text) if judge else None
         js = f"  judge={jval:+.2f}" if jval is not None else ""
 

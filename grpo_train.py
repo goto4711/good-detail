@@ -127,7 +127,7 @@ def _real_composite(text, rec):
     prem = retrieve(rec.source_text, (rec.unit or "") + " " + text, 20)
     F, unsup = nli_faithfulness(text, prem, subject=rec.unit,
                                 grounded_toks=att_t, grounded_years=att_y)
-    return _composite(text, F, unsup)
+    return _composite(text, F, unsup, source_text=rec.source_text)
 
 
 def _texts(completions):

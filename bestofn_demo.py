@@ -148,7 +148,7 @@ def main():
                     guard_reasons.append(f"anti-copy overlap={overlap:.2f}")
             else:
                 overlap = 0.0
-            row = {"text": t, "F": F, "unsup": unsup, "composite": _composite(t, F, unsup),
+            row = {"text": t, "F": F, "unsup": unsup, "composite": _composite(t, F, unsup, source_text=rec.source_text),
                    "linguistic": linguistic_reward(t), "faith_status": faith_status,
                    "length_guard": len_pen, "guard_filtered": bool(guard_reasons),
                    "guard_reason": "; ".join(guard_reasons), "anti_copy_overlap": overlap}

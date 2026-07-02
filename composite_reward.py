@@ -40,17 +40,36 @@ except ImportError:
 CASE_BY_ID = {c["case_id"]: c for c in CASES}
 
 # Reward weights + sensational lexicon live in config.py
-from config import SENSATIONAL, GAMMA, W_C, W_FAB, W_SENS
+from config import SENSATIONAL, SENSATIONAL_EXEMPT_ATTESTED, GAMMA, W_C, W_FAB, W_SENS
 # Faithfulness is now a PLUGGABLE estimator (lexical / nli / llm) in faithfulness.py.
 # Re-exported here so `from composite_reward import faithfulness` keeps working and
 # `composite_reward()` automatically uses whatever config.FAITHFULNESS_METHOD selects.
-from faithfulness import faithfulness, grounded_index  # noqa: F401
+from faithfulness import case_premise_text, faithfulness, grounded_index  # noqa: F401
 Q_KEYS = ("proper_noun_density", "number_date_density", "concreteness", "lexical_density")
 
 
-def sensationalism(text):
+def _simple_stem(word):
+    w = word.lower()
+    for suffix in ("ing", "ed", "es", "s"):
+        if len(w) > len(suffix) + 2 and w.endswith(suffix):
+            return w[:-len(suffix)]
+    return w
+
+
+def _attested_sensational_stems(case=None, source_text=None):
+    if source_text is None and case is not None:
+        source_text = case_premise_text(case)
+    if not source_text:
+        return set()
+    return {_simple_stem(w) for w in WORD_RE.findall(source_text)}
+
+
+def sensationalism(text, case=None, source_text=None):
     words = [w.lower() for w in WORD_RE.findall(text)]
-    s = sum(1 for w in words if w in SENSATIONAL)
+    attested = (_attested_sensational_stems(case=case, source_text=source_text)
+                if SENSATIONAL_EXEMPT_ATTESTED and (case is not None or source_text)
+                else set())
+    s = sum(1 for w in words if w in SENSATIONAL and _simple_stem(w) not in attested)
     return s / math.sqrt(max(1, len(words)))
 
 
@@ -63,7 +82,7 @@ def composite_reward(text, case, gamma=GAMMA, w_c=W_C, w_fab=W_FAB, w_sens=W_SEN
     Q = statistics.mean(f[k] for k in Q_KEYS)
     C = f["calibration"]
     F, n_unsup = faithfulness(text, case)
-    S = sensationalism(text)
+    S = sensationalism(text, case=case)
     return round((F ** gamma) * (Q + w_c * C) - w_fab * n_unsup - w_sens * S, 4)
 
 
