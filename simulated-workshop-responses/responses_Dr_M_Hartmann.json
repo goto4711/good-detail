@@ -1,0 +1,165 @@
+{
+  "annotator": "Dr. M. Hartmann",
+  "corpus": "EHRI",
+  "source": "extracted",
+  "gen_model": "mistral-small-3.2",
+  "responses": [
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 3,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 3,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 5,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 1,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 5,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 4,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 5,
+      "overall": 3
+    }
+  ],
+  "notes": {
+    "345ec2cb736b619c26b5e443dc6c96d9_x0": "F stands out for its nuanced framing of Carlebach's role—'fragile authority' is well-chosen. A incorrectly implies Carlebach died on 11 April 1945; the source says nothing about his death. B and C awkwardly adopt first-person despite the source being a third-party report.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x1": "B is careful to flag what is and isn't confirmed. F introduces 'executions and experiments' and 'Auschwitz' references that feel over-read from the metadata. C reads the source most faithfully regarding the 1938 arrivals.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x2": "E is the most precise paraphrase of the source—no invented dialogue, no embellishment. A and B use first-person testimony framing that isn't warranted by the source (it's a third-person description). All candidates capture the core details well.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x3": "The source is ambiguous about who was murdered (overseers or Jewish prisoners). B and D read 'prisoners who oversaw the Jews were murdered' correctly. F misspells 'Buchenwald' as 'Buchananwald'—a basic error. C and A are competent but add little interpretive value.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x4": "A and D are the most grounded. C introduces 'night of 9 November' which the source doesn't specify. The SS 'admitted' language in D is interpretive but defensible. F omits the 'pariah' framing which is central to the source's argument about systemic neglect."
+  }
+}

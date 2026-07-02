@@ -1,0 +1,165 @@
+{
+  "annotator": "Prof. H. Tanaka",
+  "corpus": "EHRI",
+  "source": "extracted",
+  "gen_model": "mistral-small-3.2",
+  "responses": [
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 5,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 5,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 5,
+      "overall": 3
+    }
+  ],
+  "notes": {
+    "345ec2cb736b619c26b5e443dc6c96d9_x0": "B and C's first-person framing is an interesting choice—it creates immediacy but misrepresents the source (a third-party report, not direct testimony). F's third-person narrative with embedded analysis is the most honest about its mediating role. A's 'testimony' framing is slightly misleading but effective.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x1": "C and D handle the fragmentary nature best—they acknowledge that the record is partial without pretending to reconstruct a complete narrative. F's framing as 'fragmentary records' is honest but its 'perpetrator' question is jarring. The choice between biographical narrative and archival description shapes how readers understand the source.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x2": "A is fascinating—it constructs a first-person voice with explicit source attribution, making the mediation visible. This is the most self-aware candidate. E is a clean paraphrase but doesn't reflect on its own narrative choices. The contrast between testimony-style and report-style candidates is instructive.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x3": "D's narrative voice is the most compelling, but it editorialises ('chilling order'). B adds historical context (Anschluss) that aids understanding. The Kommandant's declaration is reported speech in the source, and candidates handle this differently—some preserve the indirection, others flatten it.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x4": "C and E are the most interesting narratively—they engage with the SS's own language ('negative elements', 'pariahs') as objects of analysis rather than transparent descriptions. This reflexivity is valuable. F is effective but unreflective about its own framing choices."
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "annotator": "R. Okonkwo",
+  "corpus": "EHRI",
+  "source": "extracted",
+  "gen_model": "mistral-small-3.2",
+  "responses": [
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 4,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 0,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 5,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 3,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 5,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 5,
+      "overall": 3
+    }
+  ],
+  "notes": {
+    "345ec2cb736b619c26b5e443dc6c96d9_x0": "A fabricates Carlebach's death—this is a serious provenance failure. B and C include explicit source acknowledgments which is good practice. F's hedging on 'exact scope' and 'ultimate fate' is honest. The page-number references in E (p.4, p.2) map to the source metadata, which is a nice touch.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x1": "B is the best: it explicitly notes what the record does and doesn't confirm, with a clear caveat at the end. F is the worst—it speculates about 'perpetrator' status without basis. E references 'p. 2-9' which shows source awareness.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x2": "A is the most transparent about its sourcing and gaps (the '…….' acknowledgment). E is clean but lacks any uncertainty markers. B and C blend testimony style with source fidelity reasonably well.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x3": "C and E both handle the ambiguity of who was murdered carefully. The source is genuinely unclear and candidates that gloss over this lose points. F's typo aside, all candidates struggle with the Kommandant's declaration.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x4": "D is strong on sourcing ('archival evidence underscores'). C goes furthest in interpreting the SS perspective, which is risky but well-hedged. E's framing as 'SS records' is slightly misleading—this appears to be survivor testimony."
+  }
+}

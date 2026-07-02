@@ -1,0 +1,165 @@
+{
+  "annotator": "Dr. E. Rossi",
+  "corpus": "EHRI",
+  "source": "extracted",
+  "gen_model": "mistral-small-3.2",
+  "responses": [
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 4,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 2,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 3,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 4,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 5,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 3,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 5,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 1,
+      "overall": 5
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 5,
+      "overall": 3
+    }
+  ],
+  "notes": {
+    "345ec2cb736b619c26b5e443dc6c96d9_x0": "F is outstanding for foregrounding resistance as active, purposeful work rather than passive endurance. A also captures Carlebach's agency well, despite the death-date error. B reduces resistance to a passing mention. The source emphasises resistance as central, and candidates should reflect that.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x1": "A and D at least mention resistance activities. F's 'perpetrator' speculation is deeply offensive in this context—Eisner's name appears alongside SS officials in a list, not as a collaborator. The source explicitly names 'deserved resistance-fighters' and this should be centred.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x2": "This record is primarily about victimisation and the candidates reflect that. E is the best for at least noting the systematic nature of the persecution. None of the candidates capture the agency of the 'small number who were released'—were they released through resistance efforts? The source is ambiguous.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x3": "D is the best here—it explicitly frames the anti-fascist prisoners' actions as 'rebellion' and notes the Kommandant's purge as a *response* to resistance. B also handles this well. Most candidates treat the resistance as background rather than as the primary narrative arc.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x4": "C is the strongest for noting that the SS perspective on 'negative elements' reveals the ideological machinery. All candidates are somewhat passive in framing. The source itself centres victimisation, but the broader document context (resistance in earlier sections) should inform interpretation."
+  }
+}

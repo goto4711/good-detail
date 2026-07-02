@@ -1,0 +1,165 @@
+{
+  "annotator": "Prof. J. Weiss",
+  "corpus": "EHRI",
+  "source": "extracted",
+  "gen_model": "mistral-small-3.2",
+  "responses": [
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 4,
+      "overall": 1
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 4,
+      "overall": 2
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 0,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "candidate_i": 3,
+      "overall": 1
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 3,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 1,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 5,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 2,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "candidate_i": 4,
+      "overall": 1
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 3,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 4,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 1,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 2,
+      "overall": 4
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 0,
+      "overall": 3
+    },
+    {
+      "record_id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "candidate_i": 5,
+      "overall": 3
+    }
+  ],
+  "notes": {
+    "345ec2cb736b619c26b5e443dc6c96d9_x0": "A contains a clear factual error (states Carlebach died on 11 April 1945—the source says the report covers until that date, not that he died). This alone warrants a 1. D and F are the most textually faithful. B and C adopt first-person without justification from the source genre.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x1": "F is the worst—introduces 'executions' and 'Auschwitz' linkages not supported by the provided excerpt, and raises 'perpetrator' possibility without basis. B is the most careful. A reads reasonable claims into gaps. The source is fragmentary and most candidates over-interpret it.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x2": "E is closest to a faithful paraphrase. No candidate introduces major errors, but the first-person framings (A, B, C) misrepresent the source's narrative perspective. All handle the quantitative details (300g bread, 14-15 hours) accurately.",
+    "345ec2cb736b619c26b5e443dc6c96d9_x3": "C handles the source's ambiguity best. F's 'Buchananwald' is an egregious error for any archival work. The '30 January' date lacks a year in the source—candidates that supply one are guessing. D's 'nearly 2,000' is accurate (source says ~1000 on each of two days).",
+    "345ec2cb736b619c26b5e443dc6c96d9_x4": "A and D are the most faithful. C's 'night of 9 November' adds temporal specificity not in the source. The source says 'on 9th November'—it could have been daytime. All candidates correctly capture the core violence and 'pariah' status."
+  }
+}

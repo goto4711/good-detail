@@ -1,0 +1,348 @@
+{
+  "corpus": "EHRI",
+  "source": "extracted",
+  "gen_model": "mistral-small-3.2",
+  "k": 6,
+  "records": [
+    {
+      "id": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "title": "345ec2cb736b619c26b5e443dc6c96d9_x0",
+      "unit": "EMIL CARLEBACH",
+      "record_block": "Unit: EMIL CARLEBACH\nTitle: 345ec2cb736b619c26b5e443dc6c96d9_x0\nSource: EHRI relation-extraction\nPerson: EMIL CARLEBACH; ERNST HEILMANN\nLocation: Buchenwald; Frankfurt a.Main\nOrganization: ANTIFASCIST Organisation; Jewish Group; RESISTANCE-fighters\nEvent: DEPORTATION TRANSPORTS; MASS MURDER\nMiscellaneous: ANTISEMITISM; Blockältester; DOGS; INSANITY; BRIBES; DUTCH Jews; Jews\nDate: Spring 1938; 11th April, 1945\n\nSOURCE EXCERPT:\nDate: Spring 1938 until 11th April, 1945. Form and Contents: Personal report of a former Blockältester at Buchenwald who was one of those responsible in the Jewish Group of the ANTIFASCIST Organisation (p.2-9). Account of various Jewish DEPORTATION TRANSPORTS and TRANSPORTS from camp to camp; ill-treatment and MASS MURDER of Jews (p.1-8). Report on the efficient activity of the RESISTANCE- fighters (p.2-9), which could eliminate ANTISEMITISM in the Camp and helped to save the lives of a considerable number of Jews. INSANITY (p.2).- BRIBES (p.2,9) DUTCH Jews (p.4). - ERNST HEILMANN, former Präsident des preussischen",
+      "picks": {
+        "composite": 4,
+        "linguistic": 0,
+        "judge": 0,
+        "grounded-gate(unsup<=1)": 4
+      },
+      "candidates": [
+        {
+          "i": 0,
+          "text": "\"In Spring 1938, Emil Carlebach, as a Blockältester at Buchenwald, witnessed the brutal deportation of Dutch Jews and the mass murder of prisoners under Nazi rule. His firsthand report details resistance efforts by the Jewish Group within the Antifascist Organisation, which fought antisemitism and saved lives through covert means—sometimes involving bribes. The account also references Ernst Heilmann, a former Prussian official, and describes scenes of insanity and violence, though specifics remain fragmented. By April 11, 1945, Carlebach’s testimony endured as evidence of survival amid the camp’s horrors.\"",
+          "F": 0.5,
+          "unsup": 3,
+          "composite": -1.289,
+          "linguistic": 3.0063,
+          "judge": 8.0
+        },
+        {
+          "i": 1,
+          "text": "**\"I was a Blockältester in Buchenwald, part of the Antifascist Organisation’s Jewish Group, documenting deportations and mass murders from Spring 1938 until April 1945. Resistance fighters, though few in number, worked tirelessly to counter antisemitism and save lives—sometimes through bribes, though the details remain uncertain. Dutch Jews were among those we tried to protect, their suffering etched into my memory. The insanity of the camp was constant, yet somehow, we endured.\"**\n\n*(Testimony based strictly on the archival record, acknowledging gaps in detail while centering verified facts.)*",
+          "F": 0.0,
+          "unsup": 7,
+          "composite": -3.5,
+          "linguistic": 2.032,
+          "judge": 8.0
+        },
+        {
+          "i": 2,
+          "text": "**\"I was a *Blockältester* in Buchenwald, one of those tasked with surviving under the Jewish Group of the Antifascist Organisation,\" testifies an anonymous former inmate. Among the transported were Dutch Jews, and I witnessed deportations and mass murder firsthand. Resistance fighters within the camp worked to combat antisemitism, even saving lives through bribes—though madness and brutality persisted. Exact details remain uncertain, but by April 11, 1945, the war’s end brought no immediate salvation. The record names Ernst Heilmann, former *Präsident des preußischen*—a reminder of lives extinguished.\"**\n\n*(Strictly grounded in the provided record, acknowledging gaps and avoiding speculation. Sources: EHRI relation-extraction dataset, Spring 1938–April 1945.)*",
+          "F": 0.25,
+          "unsup": 6,
+          "composite": -2.955,
+          "linguistic": 2.5374,
+          "judge": 8.0
+        },
+        {
+          "i": 3,
+          "text": "Emil Carlebach, a member of the Jewish Group within Buchenwald’s Antifascist Organization, served as a *Blockältester*—a position of fragile authority in the camp’s cruel hierarchy—where he witnessed and recorded devastating details of deportation transports, mass murder, and the systematic brutality against Jews, including Dutch prisoners, between spring 1938 and April 1945. His report, drawn from firsthand testimony, documents resistance fighters’ efforts to mitigate antisemitic violence, though the pervasive insanity and corruption—where bribes might intermittently sway outcomes—underscores the camp’s dehumanizing logic. The exact scope of his role and ultimate fate remain uncertain, though his account survives as a fragment of the broader struggle to bear witness. (Sources: EHRI extraction, archival report excerpts.)",
+          "F": 0.375,
+          "unsup": 5,
+          "composite": -2.416,
+          "linguistic": 2.0122,
+          "judge": 8.0
+        },
+        {
+          "i": 4,
+          "text": "**Testimony of Emil Carlebach**\nAs one of the Jewish resistance leaders in Buchenwald from Spring 1938 until his death on 11 April 1945, Emil Carlebach served as a *Blockältester* in the prison camp’s underground antifascist organization. His reports detail the horrors of deportation transports, mass murder, and the brutal conditions endured by prisoners, including Dutch Jews and others targeted by Nazi antisemitism. Despite the chaos and mental strain—marked as \"insanity\" in records—Carlebach and fellow resistors actively undermined Nazi oppression, even documenting covert efforts to save lives through organized resistance and, at times, bribes. Though the full scope of his actions remains uncertain, his role in waging resistance against the genocide is undeniably documented.",
+          "F": 0.6,
+          "unsup": 2,
+          "composite": -0.758,
+          "linguistic": 2.3459,
+          "judge": 8.0
+        },
+        {
+          "i": 5,
+          "text": "**Testimony of Emil Carlebach**\n\nAs a *Blockältester* in Buchenwald, Emil Carlebach witnessed horrors: the mass murder of Jews, including Dutch deportees, and the infamous brutality of dog attacks (p. 4). Affiliated with the Antifascist Organisation’s Jewish Group, he documented resistance efforts that mitigated antisemitism and saved lives (p. 2-9). His account from April 1945 recalls bribes and insanity (p. 2) amid the chaos of transport systems. Though details like exact dates remain uncertain, his role as a resistance-linked prisoner underscores the precarious balance between survival and revolt in the camp.",
+          "F": 0.3333333333333333,
+          "unsup": 6,
+          "composite": -2.914,
+          "linguistic": 2.7522,
+          "judge": 8.0
+        }
+      ]
+    },
+    {
+      "id": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "title": "345ec2cb736b619c26b5e443dc6c96d9_x1",
+      "unit": "KURT EISNER junior",
+      "record_block": "Unit: KURT EISNER junior\nTitle: 345ec2cb736b619c26b5e443dc6c96d9_x1\nSource: EHRI relation-extraction\nPerson: KURT EISNER junior; KOCH; SOMMER; Dr. HOVEN\nOrganization: SS-officials; NAZI SPIES\nMiscellaneous: KAPOS; CHILDREN; resistance-fighters; Jews\nEvent: EXPERIMENTS; MUTINY; NON-JEWS HELPING JEWS; SABOTAGE\nLocation: AUSCHWITZ; Camp GUSEN; MAUTHAUSEN; MAGDEBURG; ZEIST; Buchenwald\nDate: 1938\n\nSOURCE EXCERPT:\nLandtags; KURT EISNER junior (p.5) Camp-commander KOCH (p.2,4), Oberscharführer SOMMER, Lagerarzt Dr. Lists of SS-officials (p.2-4, 6, 9); names of KAPOS (p.9). - Camp GUSEN near MAUTHAUSEN (p.4). - Aussenkommandos MAGDEBURG and ZEIST (p.7). - - NON-JEWS HELPING JEWS (p.6-9). Names of deserved resistance-fighters (p.3-7, 9). History of the Jews at Buchenwald When the first Jews arrived at Buchenwald early in 1938 the camp was still largely run by criminals imprisoned there who completely went along with the SS and their methods. The Jews involved, all 1,000 of them, were taken there as a result of a so-called campaign - that is, the authorities had simply arrested people en masse in several towns so as to spread terror among the rest and force them to emigrate and give up their",
+      "picks": {
+        "composite": 4,
+        "linguistic": 1,
+        "judge": 0,
+        "grounded-gate(unsup<=1)": 1
+      },
+      "candidates": [
+        {
+          "i": 0,
+          "text": "**Testimony of Kurt Eisner junior**\n\nKurt Eisner junior was detained in concentration camps, including Buchenwald, where he witnessed the arrival of 1,000 Jews in early 1938, forcibly taken in a terror campaign to compel emigration. The record lists his association with Kamp GUSEN near Mauthausen and *\naussenkommandos* in Magdeburg and Zeist, though specific details of his experiences remain unclear. SS officials like Camp Commander Koch, Oberscharführer Sommer, and Lagerarzt Dr. Hoven are named, alongside accounts of non-Jewish resistance fighters aiding Jews. The document suggests Eisner’s presence in a system where even Kapos, criminal prisoners, enforced brutal SS methods. His fate beyond this period is not preserved in the archive.\n\n*(Note: The record does not confirm Eisner’s survival or actions, only his documented associations and the broader context of these camps.)*",
+          "F": 0.25,
+          "unsup": 6,
+          "composite": -2.945,
+          "linguistic": 3.1882,
+          "judge": 8.0
+        },
+        {
+          "i": 1,
+          "text": "**Testimony Fragment: Kurt Eisner Jr. at Buchenwald and Beyond**\n\nKurt Eisner Jr. was among the first 1,000 Jews deported to Buchenwald in early 1938 under Nazi terror campaigns, where the camp was then dominated by criminal functionaries loyal to the SS. He later endured transfers to Camp GUSEN near Mauthausen and labor sub-conflicts at Aussenkommandos in Magdeburg and Zeist. The record notes acts of non-Jewish solidarity, though Eisner’s specific role remains unclear. Documents mention resistance fighters and SS officials like camp commander Koch and Lagerarzt Dr. Hoven, but his individual fate—a victim of Nazi violence or a survivor—is unconfirmed beyond these fleeting citations.",
+          "F": 0.5714285714285714,
+          "unsup": 3,
+          "composite": -1.273,
+          "linguistic": 3.6108,
+          "judge": 8.0
+        },
+        {
+          "i": 2,
+          "text": "**Testimony of Kurt Eisner Junior**\n\nKurt Eisner junior was among the first Jews transferred to Buchenwald in early 1938, part of an SS-directed mass arrest campaign intended to terrorize and force emigration. The camp at this time was controlled by criminal prisoners who collaborated with the SS, subjecting the 1,000 Jewish internees to brutal conditions. Eisner’s movements later included the subcamp Guse (near Mauthausen) and labor detachments in Magdeburg and Zeist, though uncertainty remains about his precise role. Some records indicate non-Jewish resistance fighters and Kapos assisted prisoners, though Eisner’s personal actions are undocumented. His fate beyond 1938, like many in the record, remains unknown.\n\n*(Sources: EHRI relation-extraction, p. 2-9, 1938 Buchenwald arrival records)*",
+          "F": 0.2727272727272727,
+          "unsup": 8,
+          "composite": -3.937,
+          "linguistic": 3.0587,
+          "judge": 8.0
+        },
+        {
+          "i": 3,
+          "text": "**\"Kurt Eisner junior\" appears in fragmentary records tied to Nazi camps, though his specific role remains unclear. Associated with SS officials like Camp Commander Koch and Oberscharführer Sommer, as well as executions and experiments, his name appears in lists from GUSEN (near Mauthausen) and Bezug (reference) to Auschwitz. A note mentions non-Jews aiding Jews, suggesting possible resistance or witness testimony, but details remain obscured. The record’s gaps leave unresolved whether he was a victim, perpetrator, or minor figure in the camp infrastructure.**\n\n*(Based solely on provided source excerpts; no invented elements.)*",
+          "F": 0.25,
+          "unsup": 6,
+          "composite": -2.959,
+          "linguistic": 2.2379,
+          "judge": 8.0
+        },
+        {
+          "i": 4,
+          "text": "**Testimony of Kurt Eisner Junior**\n\nKurt Eisner Junior was held in multiple Nazi camps, including Buchenwald (from early 1938), Gusen, and Mauthausen, where he endured brutal conditions. The record suggests he may have interacted with SS officials like Camp-commander Koch, Oberscharführer Sommer, and Dr. Hoven, though his specific role remains unclear. Einsatzkommandos in Magdeburg and Zeist are mentioned in his file, and the context implies possible sabotage or resistance activities, as non-Jews occasionally aided Jews under such perilous circumstances. The archival silence on Eisner’s exact fate leaves much to speculation—whether he was counted among the resistance-fighters or perished unrecorded.",
+          "F": 0.3333333333333333,
+          "unsup": 2,
+          "composite": -0.91,
+          "linguistic": 2.854,
+          "judge": 8.0
+        },
+        {
+          "i": 5,
+          "text": "**Testimony of Kurt Eisner junior**\n\nKurt Eisner junior, a resistance fighter, was held at multiple Nazi camps, including Buchenwald (from early 1938), GUSEN, and Mauthausen. Records note his presence among prisoners subjected to SS brutality under Camp-commander KOCH and Oberscharführer SOMMER, though details of his specific experiences remain uncertain. The source confirms instances of non-Jews aiding Jews (p.6-9) and resistance efforts (p.3-7), though Eisner’s role is unspecified. His name appears alongside SS officials and kapos, but his fate after 1938 is undocumented.\n\n*(All details sourced from EHRI relation-extraction.)*",
+          "F": 0.3,
+          "unsup": 7,
+          "composite": -3.419,
+          "linguistic": 3.219,
+          "judge": 8.0
+        }
+      ]
+    },
+    {
+      "id": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "title": "345ec2cb736b619c26b5e443dc6c96d9_x2",
+      "unit": "People",
+      "record_block": "Unit: People\nTitle: 345ec2cb736b619c26b5e443dc6c96d9_x2\nSource: EHRI relation-extraction\nPerson: People; Prisoners; Guards\nLocation: cowshed; quarry; cordon\nMiscellaneous: 300 grams of bread; 3/4 litre of watery soup; 14 to 15 hours a day; 5 hours a night\nEvent: persecution; harassment; attacks; bullying; attempting to escape; released\n\nSOURCE EXCERPT:\nThe people who were pulled in came from the widest variety of groups in terms of age and social origin and were consequently unable to unite in response to their persecution. They had to camp out in an unfurnished cowshed, where they made do with 300 grams of bread and a 3/4 litre of watery soup a day. The prisoners overseeing them regularly cheated them even of this. Their working time was around 14 to 15 hours a day, and the living conditions and all kinds of ……. meant that they could only think of sleeping for around 5 hours a night. As result of constant harassment and attacks, especially in the quarry, three of four a day were systematically bullied into trying to run through the cordon of guards, where they were shot for attempting to escape. Aside from a small number who were released, all of them",
+      "picks": {
+        "composite": 1,
+        "linguistic": 0,
+        "judge": 0,
+        "grounded-gate(unsup<=1)": 1
+      },
+      "candidates": [
+        {
+          "i": 0,
+          "text": "\"Every day, we ate 300 grams of bread and drank 3/4 litre of watery soup—if the prisoners guarding us didn’t steal even that.\" The cowshed offered no shelter; the quarry, where we toiled 14 to 15 hours a day, was worse. Some tried to run through the cordon of guards—three, sometimes four a day—and were shot. A few were released, but most of us… I cannot say what happened to them. The guards were always watching.\"",
+          "F": 0.625,
+          "unsup": 3,
+          "composite": -1.43,
+          "linguistic": 1.6015,
+          "judge": 8.0
+        },
+        {
+          "i": 1,
+          "text": "The prisoners—a disparate group of ages and backgrounds—were confined in an unfurnished cowshed, surviving on meager rations of 300 grams of bread and three-quarters of a liter of thin soup daily. Prisoners tasked with overseeing them often stole even these few provisions. Forced to labor 14 to 15 hours a day under relentless harassment, they averaged only five hours of sleep at night. In the quarry, constant bullying drove three or four prisoners per day to attempt escaping through the guarded cordon, where they were summarily shot. Though a few were released, the vast majority faced this cycle of persecution without respite.",
+          "F": 0.9,
+          "unsup": 1,
+          "composite": -0.303,
+          "linguistic": 1.1304,
+          "judge": 8.0
+        },
+        {
+          "i": 2,
+          "text": "*\"We were taken from all walks of life—young, old, never united. We slept packed in the empty cowshed, surviving on 300 grams of bread and a bowl of thin soup that the guards often stole. For 14 hours a day, we worked in the quarry under constant harassment, harassment that left us so exhausted we could barely rest for five hours at night. Some tried to flee through the cordon—three or four each day—but few survived. Most never left; only a very few were released.\"*\n\n*(Testimony derived from EHRI relation-extraction data: Unit 345ec2cb736b619c26b5e443dc6c96d9_x2, acknowledging partial uncertainty in details due to fragmentary record.)*",
+          "F": 0.75,
+          "unsup": 2,
+          "composite": -0.78,
+          "linguistic": 1.2438,
+          "judge": 8.0
+        },
+        {
+          "i": 3,
+          "text": "*\"We were taken from every corner of life—young, old, city and country—and thrown together in a cowshed, where the guards made sure even our meager rations—300 grams of bread, three-quarters of a litre of watery soup—were rarely enough. The work lasted fourteen, sometimes fifteen hours a day, leaving us five hours at most to sleep, exhausted. In the quarry, the harassment never stopped; some were driven to try escaping through the guards' cordon, where they were shot. A few were let go eventually, but most—we don’t know exactly how many—disappeared. The records don’t say more.\"*",
+          "F": 0.6666666666666666,
+          "unsup": 4,
+          "composite": -1.937,
+          "linguistic": 1.1431,
+          "judge": 8.0
+        },
+        {
+          "i": 4,
+          "text": "\"Every day, we were given only 300 grams of bread and three-quarters of a litre of thin soup, though even that was often stolen by the guards. We slept in a cold, unfurnished cowshed, and after 14 to 15 hours of forced labor—mostly in the quarry—we were too exhausted to rest more than five hours a night. The constant harassment and beatings pushed some to try fleeing, though they were almost always shot by the guards’ cordon. Many did not survive; a few were released, but no one truly escaped this place.\"",
+          "F": 0.6,
+          "unsup": 4,
+          "composite": -1.984,
+          "linguistic": 1.0745,
+          "judge": 8.0
+        },
+        {
+          "i": 5,
+          "text": "**\"We were many—old, young, all sorts—and no one knew each other enough to stand together. They made us sleep in a cowshed, cold and empty, with barely 300 grams of bread and a thin soup to share per day. The guards took even that. Fourteen hours of forced labor, then five hours of broken sleep. Some tried to run. Most were shot. A few were let go. The rest?\" The record does not say.\"**\n\n*(Based on EHRI relation-extraction record 345ec2cb736b619c26b5e443dc6c96d9_x2; specifics of \"cowshed,\" rations, working hours, and fate sourced; gaps in text (e.g., \"…….\") and victimization acknowledgment included as attested in record.)*",
+          "F": 0.7272727272727273,
+          "unsup": 3,
+          "composite": -1.404,
+          "linguistic": 1.1079,
+          "judge": 8.0
+        }
+      ]
+    },
+    {
+      "id": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "title": "345ec2cb736b619c26b5e443dc6c96d9_x3",
+      "unit": "Kommandant",
+      "record_block": "Unit: Kommandant\nTitle: 345ec2cb736b619c26b5e443dc6c96d9_x3\nSource: EHRI relation-extraction\nLocation: Buchenwald; Vienna\nDate: 23rd of September 1938; 24th of September 1938; 30 January\nPerson: Kommandant; men; prisoners\nMiscellaneous: Jews; German anti-fascists\n\nSOURCE EXCERPT:\nAs a result, the Jewish prisoners found themselves in a position which was clearly more advantageous in that it led the Kommandant to declare on 30 January that prisoners who oversaw the Jews were murdered apart from a remnant of twenty who are still in Buchenwald today. On each of the 23rd and the 24th of September 1938 around a thousand more Jews arrived at Buchenwald, which now counted as a liquidation camp. The vast majority of men on both these transports had been arrested as part of a campaign following the occupation of Vienna for the same reasons as mentioned above. Along with them though were some, partly long-term, prisoners who had been interned because of their anti-fascist views. Over the following weeks and months, the struggle of these imprisoned German anti-fascists reached its first high point, with the result that the overseers’ roles were purged of criminal elements.",
+      "picks": {
+        "composite": 5,
+        "linguistic": 2,
+        "judge": 0,
+        "grounded-gate(unsup<=1)": 5
+      },
+      "candidates": [
+        {
+          "i": 0,
+          "text": "On 30 January, the *Kommandant* at Buchenwald declared that all but twenty Jewish prisoner overseers had been murdered, leaving only a remnant behind. Earlier, on 23 and 24 September 1938, around a thousand Jewish men arrived—many from Vienna, arrested during the Nazi occupation following *Anschluss*. Among them were also German anti-fascists, some long-term prisoners, whose resistance soon led to the removal of criminal elements from overseer roles. The camp’s function as a \"liquidation camp\" is suggested by the record, though the precise nature of these killings remains uncertain. The *Kommandant*’s actions reflect the camp’s evolving role in Nazi persecution, though his exact title and identity are not specified in the archival material.",
+          "F": 0.1,
+          "unsup": 9,
+          "composite": -4.494,
+          "linguistic": 2.0665,
+          "judge": 8.0
+        },
+        {
+          "i": 1,
+          "text": "**Testimony of an Unknown Prisoner**\n\nOn 30 January, the *Kommandant* at Buchenwald issued a chilling order: prisoners who had supervised Jewish inmates were executed, except for a narrowly spared group of twenty. The record does not name him, but his command marked a brutal turn. Earlier, on the 23rd and 24th of September 1938, nearly 2,000 Jewish men—many arrested in Vienna after the *Anschluss*—were deported to Buchenwald, now designated a \"liquidation camp.\" Some were long-term anti-fascist prisoners caught in the same sweep. The *Kommandant’s* purge of overseers followed a rebellion by German political prisoners, suggesting resistance even in silence. What became of the survivors remains unresolved.",
+          "F": 0.09090909090909091,
+          "unsup": 10,
+          "composite": -5.187,
+          "linguistic": 2.5631,
+          "judge": 8.0
+        },
+        {
+          "i": 2,
+          "text": "**Testimony of the Kommandant’s Orders at Buchenwald**\n\nOn 30 January, the Kommandant declared that Jewish prisoners’ overseers were executed, sparing only a remnant of twenty. Earlier, on 23 and 24 September 1938, around a thousand Jewish men arrived from Vienna—mostly anti-fascists and those arrested during the occupation—appearing in the camp’s records as a “liquidation camp.” Among them were German anti-fascists, some held since earlier arrests. The Kommandant later purged overseers of criminal elements, following resistance by imprisoned anti-fascists. Whether the purge was ordered or seized upon remains unclear, but it marked a shift in authority within the camp (EHRI relation-extraction; Buchenwald records).",
+          "F": 0.0,
+          "unsup": 7,
+          "composite": -3.694,
+          "linguistic": 2.6242,
+          "judge": 8.0
+        },
+        {
+          "i": 3,
+          "text": "On 30 January, the Kommandant of Buchenwald declared that most Jewish prisoner overseers had been murdered, leaving only twenty survivors. Between 23 and 24 September 1938, around one thousand more Jews arrived, primarily from Vienna following its occupation, among them some long-term German anti-fascists. Though the source does not clarify the Kommandant’s identity, it underscores their role in the camp’s operations, including the selective elimination of overseers and the designation of Buchenwald as a \"liquidation camp.\" The precise motives behind these actions remain ambiguous, but the record confirms the targeted repression of both Jewish prisoners and political dissidents. The surviving overseers’ fate—and why they were spared—remains uncertain.",
+          "F": 0.0,
+          "unsup": 7,
+          "composite": -3.5,
+          "linguistic": 2.2709,
+          "judge": 8.0
+        },
+        {
+          "i": 4,
+          "text": "In Buchananwald, the Kommandant issued a statement on 30 January declaring that overseers of Jewish prisoners had been murdered, except for a remnant of twenty who remained. Between 23 and 24 September 1938, around a thousand Jewish men arrived from Vienna, many arrested following the Nazi annexation, with some identified as long-term anti-fascist prisoners. The circumstances of the overseers' killings remain unclear, as the record does not specify the exact dates or methods. What is certain is that these transports marked Buchenwald's classification as a \"liquidation camp,\" while imprisoned German anti-fascists resisted, leading to the eventual removal of criminal elements from oversight roles. The fate of the surviving overseers and the conditions under which they retained their positions are not detailed in the source.",
+          "F": 0.2,
+          "unsup": 8,
+          "composite": -3.978,
+          "linguistic": 1.9384,
+          "judge": 8.0
+        },
+        {
+          "i": 5,
+          "text": "On 30 January, the Kommandant of Buchenwald declared that Jewish prisoners had gained an advantage, as the overseers who managed them were nearly all murdered—except for a remnant of twenty who remained in the camp. The record shows that between 23 and 24 September 1938, around one thousand Jews arrived from Vienna, many arrested following the Nazi occupation, while others were long-term German anti-fascists. The Struggle within Buchenwald escalated, leading to the later purging of criminal elements from overseer roles. The exact identities and fates of the remaining twenty overseers remain unclear. The camp was now designated a \"liquidation camp,\" though the full implications of this categorization are not specified in the source.",
+          "F": 0.3333333333333333,
+          "unsup": 6,
+          "composite": -2.93,
+          "linguistic": 2.209,
+          "judge": 8.0
+        }
+      ]
+    },
+    {
+      "id": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "title": "345ec2cb736b619c26b5e443dc6c96d9_x4",
+      "unit": "Jews",
+      "record_block": "Unit: Jews\nTitle: 345ec2cb736b619c26b5e443dc6c96d9_x4\nSource: EHRI relation-extraction\nMiscellaneous: Jews; Aryans; Jewish prisoners\nLocation: the camp; Weimar\nDate: 9th November 1938\nOrganization: SS\nEvent: Rath campaign\n\nSOURCE EXCERPT:\nwould in future be Jews themselves. On 9th November 1938 over 12,000 Jews entered the camp as a result of the so-called Rath campaign. As they came in, the SS, armed with clubs and whips, were lined up in the streets of Weimar so that only a few Jews reached the camp uninjured. Later on these too came to include various negative and dangerous elements, but they were considerably easier to get rid of than if they had been so-called Aryans. In terms of the way they were looked after and generally dealt with, and of their working hours, the Jewish prisoners remained pariahs in the camp, and the great number of deaths among them over the following years must be traced to that. The streets, strewn with bloodied bits of luggage and clothing with injured people lying among them, looked like a battlefield. These thousands of people were put",
+      "picks": {
+        "composite": 0,
+        "linguistic": 1,
+        "judge": 0,
+        "grounded-gate(unsup<=1)": 3
+      },
+      "candidates": [
+        {
+          "i": 0,
+          "text": "On the night of 9 November 1938, during the so-called *Rath* campaign, over 12,000 Jews were forcibly brought into a camp in Weimar. According to SS records, they were subjected to brutal beatings by guards armed with clubs and whips as they entered, leaving streets strewn with bloodied belongings and injured bodies. While the SS later categorized some Jewish prisoners as \"negative and dangerous elements,\" the high mortality rate among them during subsequent years suggests systemic neglect and abuse. The exact causes of these deaths remain undetermined in the available sources, though their treatment as \"pariahs\" in camp hierarchies is documented. The violence that night transformed Weimar’s streets into a scene resembling a battlefield, though the precise numbers of those killed or injured remain uncertain.",
+          "F": 0.6,
+          "unsup": 2,
+          "composite": -0.808,
+          "linguistic": 1.8035,
+          "judge": 8.0
+        },
+        {
+          "i": 1,
+          "text": "On the night of 9 November 1938, the SS violently rounded up over 12,000 Jews in Weimar as part of the \"Rath campaign,\" driving them toward the camp as others armed with clubs and whips awaited them. Injured prisoners arrived amid scenes of destruction—streets littered with bloodstained belongings and the wounded. Even those who reached the camp unharmed endured brutal treatment, subjected to longer work hours and harsher conditions than other prisoners. While the exact death toll remains uncertain, the record makes clear that Jewish incarcerations under the SS led to devastating losses in the years that followed. The SS noted that eliminating these \"negative and dangerous elements\" proved easier than removing so-called Aryan prisoners, reflecting the systemic dehumanization of Jews.",
+          "F": 0.25,
+          "unsup": 6,
+          "composite": -2.962,
+          "linguistic": 2.1082,
+          "judge": 8.0
+        },
+        {
+          "i": 2,
+          "text": "On 9th November 1938, as part of the so-called Rath campaign, over 12,000 Jews were forcibly brought into a camp in Weimar. SS officers armed with clubs and whips lined the streets, ensuring many arrived battered, with bloodied luggage and clothing scattered like debris in their wake. Though some Jews initially reached the camp unharmed, their status as prisoners set them apart—subject to brutal working conditions and systematic neglect, contributing to high mortality rates. The SS later admitted Jews were easier to expel than \"Aryans,\" treating them as disposable pariahs. Exact identities and subsequent fates remain unknown, but the archival evidence underscores the deliberate, state-sanctioned violence of that night.",
+          "F": 0.5,
+          "unsup": 6,
+          "composite": -2.857,
+          "linguistic": 1.9676,
+          "judge": 8.0
+        },
+        {
+          "i": 3,
+          "text": "On 9 November 1938, during the so-called Rath campaign, over 12,000 Jews were forcibly brought into a camp near Weimar. SS officers, armed with clubs and whips, assaulted them in the streets, leaving many injured and the streets strewn with bloodied clothing and belongings. Though some Jews reached the camp unharmed, they—like those already incarcerated—remained pariahs under harsher conditions, with prolonged working hours and negligible care. The resulting high death toll among these prisoners in subsequent years underscores the systemic brutality. Exact conditions within the camp and survival rates remain uncertain, but testimony confirms the deliberate dehumanization of Jewish prisoners.",
+          "F": 0.7,
+          "unsup": 3,
+          "composite": -1.231,
+          "linguistic": 1.8474,
+          "judge": 8.0
+        },
+        {
+          "i": 4,
+          "text": "On 9 November 1938, the SS violently herded over 12,000 Jews into a camp at Weimar as part of the Rath campaign. Armed with clubs and whips, they lined the streets, ensuring few arrived unharmed. The camp’s streets were littered with bloodied luggage, clothing, and bodies—resembling a battlefield. Though later joined by non-Jewish prisoners, Jews endured harsher treatment, longer work hours, and disproportionate fatalities in the years that followed. The extent of individual suffering remains unknown, but the scale of violence is documented in this account.",
+          "F": 0.625,
+          "unsup": 3,
+          "composite": -1.285,
+          "linguistic": 1.8923,
+          "judge": 8.0
+        },
+        {
+          "i": 5,
+          "text": "On 9 November 1938, as part of the \"Rath campaign,\" over 12,000 Jews were forcibly brought to a concentration camp in Weimar. SS guards, armed with clubs and whips, lined the streets, ensuring many arrived injured or bloodied amidst discarded, broken luggage. Though some survived initial violence, Jewish prisoners were systematically denied basic humane treatment, forced into grueling labor, and marked for persecution. The streets bore the spectacle of a battlefield, littered with belongings and wounded bodies. Many perished in the years that followed due to conditions deliberately designed to degrade and destroy them.",
+          "F": 0.7,
+          "unsup": 3,
+          "composite": -1.247,
+          "linguistic": 1.747,
+          "judge": 8.0
+        }
+      ]
+    }
+  ]
+}

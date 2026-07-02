@@ -1,0 +1,25 @@
+{
+  "name": "EHRI",
+  "description": "EHRI early Holocaust testimony (CC-BY-SA). Two ingest sources over the same material.",
+  "default_source": "xml",
+  "sources": {
+    "xml": {
+      "adapter": "tei_ehri",
+      "path": "xml",
+      "register": "testimony",
+      "note": "TEI header (entity inventory + provenance) + split body chunks."
+    },
+    "iob": {
+      "adapter": "iob_jsonl",
+      "path": "iob/merged_intermediate_data.jsonl",
+      "register": "testimony",
+      "note": "Relation-extraction output: typed entities + relations + document_text."
+    },
+    "extracted": {
+      "adapter": "iob_jsonl",
+      "path": "iob/extracted.jsonl",
+      "register": "testimony",
+      "note": "Fact base produced by the DSPy front-end (dspy_extract.py) from this corpus."
+    }
+  }
+}
