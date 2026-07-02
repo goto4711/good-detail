@@ -61,7 +61,7 @@ BACKEND=vllm MODEL=Qwen/Qwen2.5-7B-Instruct V2_LIMIT=8 PYTHON=python bash run_al
 | script | key flags |
 |---|---|
 | `realdata_generate.py` | `--corpus EHRI --source xml\|iob\|extracted`, `--adapter`, `--sft_adapter`, `--summary` (aggregate metrics), `--relations` (off by default), `--judge` |
-| `bestofn_demo.py` (the historian demo) | `--gen_backend/--gen_model` (any LLM), `--k`, `--judge`, `--gate` + `--gate_unsup N` (always-grounded pick), `--save out.json`, `--no_redact` |
+| `bestofn_demo.py` (the historian demo) | `--gen_backend/--gen_model` (any LLM), `--k`, `--judge`, `--gate` + `--gate_unsup N` (always-grounded pick), `--save out.json`, `--no_redact`, `--no_guards` (2026-07-02: the GRPO guards now also run at selection time — format/anti-copy filter candidates, length is a soft penalty; this flag restores raw ranking) |
 | `dspy_extract.py` (front-end) | `--backend uva\|vllm\|gemini`, `--limit`, `--relations` (off = entity-only), `--compile` |
 | workshop | `make_annotation_sheet.py candidates.json -o form.html` → `analyze_annotations.py candidates.json responses/` (files OR a folder) |
 | `make_authoring_sheet.py` (gold front-door) | `--corpus EHRI --source extracted --limit N` (or `--from records.json`) → `authoring.html` + `records.json`. Historians WRITE the summary; collect `authored_*.json` |
@@ -85,6 +85,10 @@ the NAME.
 | LLM backends / default models / retries | `BACKENDS`, `MAX_RETRIES`… (§2) |
 | **composite reward**: gate sharpness, penalties | `GAMMA`, `W_C`, `W_FAB`, `W_SENS` (§3) |
 | **how grounding F is estimated** (lexical/nli/llm) | `FAITHFULNESS_METHOD`, `NLI_MODEL`, `NLI_ENTAIL_THRESHOLD` (§3) |
+| LLM-faithfulness fallback: warn-and-count vs raise | `FAITHFULNESS_STRICT` (§3, added 2026-07-02) |
+| contradiction vetoes entailment across premises (nli) | `NLI_CONTRADICTION_VETO` (§3, added 2026-07-02; **keep off** — cross-premise contradiction is noisy: an entailed claim can carry c=1.00 from a different premise, so the veto over-fires) |
+| strip hedge adverbs from claims before NLI scoring | `NLI_STRIP_HEDGES` (§3, added 2026-07-02; fixes the 15/16 cell — a hedged grounded claim scored as a c=1.00 contradiction of its definite premise) |
+| exempt source-attested words from the sensationalism penalty | `SENSATIONAL_EXEMPT_ATTESTED` (§4, added 2026-07-02) |
 | **source-passage retrieval** (lexical/embed) | `RETRIEVAL_METHOD`, `EMBED_MODEL` (§3) |
 | **linguistic reward** feature weights | `WEIGHTS` (§3) |
 | **personas** — *whose "good"?* (add your own) | `PERSONAS` (§3) |
@@ -97,7 +101,7 @@ the NAME.
 | the **writing instruction** (GRPO/SFT/generate) | `INSTRUCTION` (§6) |
 | the **judge rubric** | `RUBRIC_SYSTEM`, `RUBRIC_USER` (§6) |
 | the **v2 generation prompts** | `RENDER_SYS`, `STYLE_PROMPT` (§6) |
-| GRPO length / anti-copy / format guards | `TARGET_WORDS`, `W_LEN`, `ANTICOPY_N`, `ANTICOPY_TOL`, `W_COPY`, `W_FORMAT` (§7) |
+| length / anti-copy / format guards (GRPO **and**, since 2026-07-02, best-of-N selection — shared in `guards.py`) | `TARGET_WORDS`, `W_LEN`, `ANTICOPY_N`, `ANTICOPY_TOL`, `W_COPY`, `W_FORMAT` (§7) |
 
 **Not in `config.py`** (too large / it's code — edit in place):
 - the **records themselves** → `CASES` in `generate_synthetic_corpus.py`

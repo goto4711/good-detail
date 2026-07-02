@@ -109,7 +109,11 @@ is — a vivid fabrication cannot buy back reward with more vividness. The
 additive `n_unsup` and `S` penalties then push fabrication below bland-but-honest
 text. The validator (`python composite_reward.py`) confirms the effect: the
 composite ranks good above fabricated in 16/16 grid cells where the
-linguistic-only reward manages only 4/16.
+linguistic-only reward manages 0/16. (Numbers as of the 2026-07-02 code fixes,
+`FIXES_REPORT.md`: pre-fix these were reported as 16/16 vs 4/16 — the linguistic
+reward's 4 "correct" cells were an artifact of the ALL-CAPS proper-noun counting
+bug; the composite briefly dipped to 15/16 until the hedge-contradiction artifact
+was diagnosed and fixed via `NLI_STRIP_HEDGES` — see §2a.)
 
 ### 2a. Faithfulness — a pluggable estimator (the core methods contribution)
 
@@ -157,17 +161,26 @@ The fourth verdict is the conceptual point. **Blandness is not unfaithfulness.**
 A vague flattened sentence ("she was an ordinary person") is *neutral* — not
 false — so it is excluded from the denominator rather than punished. Penalising
 vagueness is the linguistic/quality reward's job; faithfulness should only fire
-on fabrication. On the grid this yields the right ordering — good ≈ 0.83,
+on fabrication. On the grid this yields the right ordering — good ≈ 0.89,
 flattened ≈ 0.88 (bland but honest, not penalised), fabricated ≈ 0.49 with ~3
 fabrications per cell — and the per-claim debug view (`python faithfulness.py
 --debug`) shows the model tagging the fabricated arm's inventions ("the Gestapo
 seized…", "Officer Reinhardt… Westmark depot… 1941") as contradictions at ~0.97.
 Thresholds (`NLI_ENTAIL_THRESHOLD`, `NLI_CONTRADICT_THRESHOLD`) are dials; the
-debug view shows which way to move them. Known residual artefacts: a hedged
-grounded claim ("probably in 1939") can fall just under the entailment threshold
-and land in the benign `vague` bucket (un-credited but not penalised), and a
-malformed bland fragment can occasionally trip a false contradiction — both
-rare, both visible in the debug view.
+debug view shows which way to move them. Known residual artefacts (revised
+2026-07-02 after the 15/16-cell diagnosis, `FIXES_REPORT.md`): a hedged grounded
+claim ("removed … probably in 1940") is worse than first documented — the NLI
+model can score it as a **full contradiction (c=1.00)** of the definite premise,
+penalising exactly the hedging that calibration rewards; this was systematic
+(good drew unsup=1–2 in 6/16 cells) and is now fixed by `config.NLI_STRIP_HEDGES`
+(hedge adverbs are stripped from the claim before entailment scoring — the
+factual core is what must be entailed; the hedge is calibration's business).
+Still open: a *relational* fabrication that introduces no new entity or year
+("last child to leave the burning schoolhouse") lands in the benign `vague`
+bucket — invisible to both the NLI verdict and the invented-specific check; that
+gap is what the LLM claim-verifier (P3) is for. Also note max-contradiction is
+noisy *across* premises (an entailed claim can carry c=1.00 from a different
+premise), which is why `NLI_CONTRADICTION_VETO` stays off.
 
 **`llm` (strongest, slowest).** Ask an LLM judge to read the record and the
 narrative and count the unsupported claims. The most flexible at catching
@@ -274,7 +287,7 @@ axes it was **not** trained on.
 
 **The structure that makes the cost real — the agreement matrix.** We measure the
 correlation between every pair of reward signals across the grid. On this corpus
-`corr(linguistic, NLI-faithfulness) ≈ −0.34`: they are *anti*-correlated, so
+`corr(linguistic, NLI-faithfulness) ≈ −0.38` (−0.34 pre-fix): they are *anti*-correlated, so
 maximising one mechanically pushes the other down. This is what makes the
 surface reward a hazard rather than a harmless proxy — if the two were
 uncorrelated you could satisfy both and there would be no story; if positively

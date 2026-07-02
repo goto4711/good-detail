@@ -6,6 +6,11 @@
 > selection, and the historian-workshop apparatus. **For the current state read
 > `experiments.md` (results), `FRAMING.md` (framing), and `NEXT_STEPS.md` (roadmap).**
 > Kept for history. (The folder is now `good-detail/`, not `For-Chloe/`.)
+>
+> **2026-07-02:** a reward-code fix pass (`FIXES_REPORT.md`) revised the grid numbers
+> cited below — composite good>fab **16/16** (after a diagnosed dip to 15/16, fixed
+> via `NLI_STRIP_HEDGES`), linguistic **0/16** (was 4/16), corr(linguistic, NLI-F)
+> **−0.38** (was −0.34). The historical figures in this snapshot are left as written.
 
 **Date:** 17 June 2026
 **Folder:** `For-Chloe/` (this folder)

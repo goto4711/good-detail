@@ -6,7 +6,7 @@
 - **Moved:** `human_reward.py` balanced two-arm line `good > fabricated : ... linguistic` changed from **4/16** to **0/16**.
 - **Moved:** `faithfulness.py --method nli --agreement` changed from **r = -0.34** to **r = -0.41**.
 - **Stable:** `faithfulness.py --method nli` mean F stayed **good 0.83 / flattened 0.88 / fabricated 0.49**.
-- **Baseline caveat:** in this repo state, `python composite_reward.py` already printed **composite good > fabricated = 15/16** before the fixes, not the published 16/16. After the fixes it remains **15/16**. The torch-free Tier A smoke path now forces lexical faithfulness and prints **16/16** there.
+- **Baseline caveat:** in this repo state, `python composite_reward.py` already printed **composite good > fabricated = 15/16** before the fixes, not the published 16/16. After the fixes it remains **15/16**. The torch-free Tier A smoke path now forces lexical faithfulness and prints **16/16** there. **Resolved 2026-07-02 — see "Diagnosis of the 15/16 cell" below**; the `NLI_STRIP_HEDGES` fix addresses the mechanism.
 
 ## Validator summary
 
@@ -107,6 +107,52 @@ The stock `synth_case_001` example was unchanged before/after:
 That is expected: the hardening targets malformed split fragments and very short invented-specific stubs, which do not appear in the canned debug example.
 
 **Tier A smoke.** `bash test_pipeline.sh` now passes with `torch` intentionally blocked by a temporary `sitecustomize.py`. The script keeps Tier A torch-free by forcing lexical faithfulness only for the synthetic composite/human smoke path; the standalone NLI validator remains separate (`python faithfulness.py --method nli --agreement`).
+
+## Diagnosis of the 15/16 cell (2026-07-02, `debug_cell.py`)
+
+The failing cell is **`synth_case_005/testimony`**, lost by **0.008** (good −0.194 vs
+fabricated −0.186). Per-claim NLI verdicts show a *double artifact*, not environment
+noise:
+
+1. **Good over-penalised — the hedge-contradiction artifact.** "Pavel Stern was
+   removed from the school register **probably** in 1940" scores **CONTR at c=1.00**
+   against the definite premise "…removed from the school register in 1940"; the
+   identical claim *without* "probably" (in the fabricated text) gets e=1.00 OK. The
+   NLI model reads hedging a definite fact as contradiction — the estimator punished
+   exactly the hedging that the calibration feature rewards. This is the
+   `methods_rewards.md §2a` "hedged claim" artifact, but landing in the *penalised*
+   CONTR bucket, not the benign vague one, and it is systematic: good draws unsup=1–2
+   in 6/16 cells (003/testimony good F=0.33).
+2. **Fabricated under-penalised — relational fabrication escapes.** "He was the last
+   child to leave the burning schoolhouse in 1940" lands **vague** (e=0.00, c=0.21):
+   it invents no capitalised entity and no new year, so the INVNT check cannot see it
+   and the NLI model does not contradict it. Only "Major Keller … Ostheim … 27 August
+   1942" is caught (INVNT). Net: fabricated keeps F=0.75/unsup=1 despite two inventions.
+
+**Fix applied:** `config.NLI_STRIP_HEDGES = True` (fix 11) — hedge adverbs
+(`config.HEDGES`) are stripped from a claim before NLI scoring, so the factual core is
+what must be entailed; the original claim is kept for the INVNT check and debug
+display. The cache key includes the flag. **Confirmed on MPS, 2026-07-02:** good's
+claim 3 in 005 flips CONTR → OK (e=1.00), good F=1.00/unsup=0, and the grid recovers
+**composite 16/16** — by mechanism, not threshold-tuning. Final post-fix(11) grid
+state: mean F **good 0.89 / flattened 0.88 / fabricated 0.49** (good's unsup mean
+0.56 → **0.38** — the systematic hedge penalty removed), and
+corr(linguistic, NLI-F) settles at **−0.38** (path: −0.34 original → −0.41 after
+fix 5 → −0.38 after fix 11; still solidly anti-correlated). Artifact 2 (relational
+fabrication) remains a known blind spot; it is the residual gap between NLI-F and
+the LLM claim-verifier (P3 in `NEXT_STEPS.md`).
+
+**Why the published run showed 16/16:** cannot be fully pinned without the original
+A10 environment; the verdicts here are saturated (c=1.00), so simple numeric drift is
+unlikely — more probably a transformers/tokenizer version difference in the NLI stack.
+With `NLI_STRIP_HEDGES` the question is moot: the mechanism is removed.
+
+**Veto flag warning (fix 4 follow-up):** the same debug showed the *fully entailed*
+claim "removed from the school register in 1940" carrying **max-contradiction c=1.00
+from a different premise** (likely "enrolled … in 1938"). `NLI_CONTRADICTION_VETO=True`
+would therefore mark even perfectly grounded claims as fabricated. Keep it False; a
+useful veto needs per-premise verdicts (contradiction from the same best premise),
+noted in `config.py`.
 
 ## Acceptance checks completed
 

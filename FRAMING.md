@@ -89,7 +89,8 @@ operationalising "good detail" as *several* explicit, contestable reward functio
 a surface/linguistic measure, a situated/grounded measure, a persona-weighted human
 measure, an LLM judge — and by measuring their disagreement, we re-introduce
 plurality rather than dissolving it. The disagreement is real and measurable: the
-surface and grounded rewards are *anti-correlated* on our corpus (r ≈ −0.34), and
+surface and grounded rewards are *anti-correlated* on our corpus (r ≈ −0.38 after
+the 2026-07-02 reward-code fixes; −0.34 as first published — see `FIXES_REPORT.md`), and
 different judge models (Qwen vs. Gemini) and different personas reverse the ordering
 of bland-but-honest versus vivid-but-fabricated text. The point is not to crown a
 single reward but to make visible *that* the choice of reward is a choice of values —

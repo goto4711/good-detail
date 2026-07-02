@@ -63,8 +63,9 @@ Two levels:
 **Reward-level (no training, instant)** — `python run_pipeline.py`, `composite_reward.py`,
 `human_reward.py` print how each reward ranks the same good/flattened/fabricated
 texts. This already shows the core result: the surface reward rates the fabrication
-as high as the grounded text (≈4/16 good>fab), while the grounded/human rewards get
-it 16/16. *Where the rewards disagree is the experiment in miniature.*
+as high as the grounded text (0/16 good>fab since the 2026-07-02 code fixes; 4/16
+before), while the grounded/human rewards get it right in 15–16/16. *Where the
+rewards disagree is the experiment in miniature.*
 
 **Model-level (after training)** — generate from each trained arm on the same record
 and compare prose + scores:
@@ -81,6 +82,25 @@ clearest demonstration of what a "culture-blind" reward does to the writing.
 
 ## Results (synthetic; run of 2026-06-19)
 
+> **Revision note (2026-07-02).** A code-review pass fixed several reward-implementation
+> bugs (`FIXES_REPORT.md`; notably: `proper_noun_density` counted every token of ALL-CAPS
+> text — the exact GRPO hack — and the vacuous-faithfulness / selection-guard holes).
+> Post-fix, the reward-level numbers *sharpen* the headline: linguistic good>fab
+> **4/16 → 0/16**, corr(linguistic, NLI-F) **−0.34 → −0.38** (final). The composite
+> initially printed **15/16** in the current NLI build (the published 16/16 predated
+> the fixes and did not reproduce even *before* them). **Diagnosed and fixed
+> 2026-07-02** (`debug_cell.py`, cell `synth_case_005/testimony`, margin 0.008): the
+> NLI model scored a *hedged* grounded claim ("removed … **probably** in 1940") as a
+> c=1.00 contradiction of the definite premise — penalising exactly the hedging
+> calibration rewards — while a relational fabrication with no new entity ("last
+> child to leave the burning schoolhouse") escapes as vague. Fixed by
+> `config.NLI_STRIP_HEDGES` (hedges stripped from the claim before entailment
+> scoring; see `FIXES_REPORT.md` "Diagnosis of the 15/16 cell"); confirmed:
+> **composite 16/16 recovered**, mean F good 0.83 → **0.89** (unsup 0.56 → 0.38 —
+> the systematic hedge penalty removed; flattened/fabricated unchanged). The
+> relational-fabrication blind spot remains open (P3). Numbers below are updated in
+> place with the pre-fix value in brackets where it moved.
+
 Read at two levels. **The reward level is the spine of the result** — it is clean,
 cheap, and does not depend on training. The model level is an
 infrastructure-complete but **scale-limited demonstration** (16 prompts, 300 GRPO
@@ -91,14 +111,16 @@ trained on) and in the agreement structure — never in the tautological diagona
 ### Reward level (fixed good/flattened/fabricated text — the spine)
 
 - **Discrimination.** The composite (faithfulness-gated) reward ranks *good* above
-  *fabricated* in **16/16** grid cells; the surface **linguistic** reward only
-  **4/16** — it rates fluent fabrication as highly as grounded text.
+  *fabricated* in **16/16** grid cells [dipped to 15/16 before the strip-hedges fix —
+  see revision note]; the surface **linguistic** reward in **0/16** [was 4/16] — it
+  *never* prefers grounded text over fluent fabrication.
 - **NLI faithfulness separates fabrication from blandness** (mean F / unsupported):
-  good **0.83 / 0.56**, flattened **0.88 / 0.12**, fabricated **0.49 / 3.00**.
+  good **0.89 / 0.38** [was 0.83 / 0.56 before strip-hedges], flattened **0.88 / 0.12**,
+  fabricated **0.49 / 3.00**.
   Bland-but-honest is *not* punished as false — the distinction the lexical and
   naïve versions both missed.
 - **Orthogonality (answers "is grounding just the surface reward?").**
-  `corr(linguistic_reward, NLI-faithfulness) = −0.34` across the grid. Negative:
+  `corr(linguistic_reward, NLI-faithfulness) = −0.38` [was −0.34] across the grid. Negative:
   optimising surface specificity *trades against* grounding. They measure different
   constructs — the quantitative core of the culture-blind-vs-situated claim.
 - **The LLM judge (RLAIF) is vividness-biased and inconsistent** (16 cells, Gemini

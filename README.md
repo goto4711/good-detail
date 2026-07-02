@@ -71,8 +71,10 @@ DSPy extraction front-end, grounded generate + score, real-prompt GRPO); the
 at-scale sweep (N=150); and the inference-time best-of-N selection on a clean instruct
 model. Headline findings live in `experiments.md`; the framing in `FRAMING.md`.
 
-Key results (see `experiments.md`): the rewards discriminate and *disagree* (composite
-good>fab 16/16 vs linguistic 4/16; corr(linguistic, NLI-F) ≈ −0.34); trained-policy
+Key results (see `experiments.md`; numbers revised 2026-07-02 after the reward-code
+fixes in `FIXES_REPORT.md`): the rewards discriminate and *disagree* (composite
+good>fab 16/16 vs linguistic **0/16**; corr(linguistic, NLI-F) ≈ −0.38 — pre-fix:
+16/16, 4/16, −0.34; the fixes *sharpen* the divergence); trained-policy
 differences **converge** at scale (a near-null) while reward-as-selector **diverges**
 (5/5 records); source focus, not relations, drives grounding (relations dropped).
 
