@@ -24,6 +24,7 @@ Run `python human_reward.py` for the two-arm + pluralism report.
 """
 
 import random
+import re
 import statistics
 import sys
 
@@ -56,7 +57,8 @@ def _salient_strings(case):
 def component_scores(text, case):
     low = text.lower()
     sal = _salient_strings(case)
-    coverage = sum(1 for s in sal if s.lower() in low) / max(1, len(sal))
+    coverage = sum(1 for s in sal
+                   if re.search(rf"\b{re.escape(s)}\b", text, flags=re.I)) / max(1, len(sal))
     f = features(text)
     specificity = f["concreteness"]
     calibration = max(0.0, min(1.0, 0.5 + 2.0 * f["calibration"]))
