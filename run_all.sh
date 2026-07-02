@@ -24,6 +24,15 @@ V2_LIMIT=${V2_LIMIT:-2}             # cases for v2 LLM rendering (keep small —
                                     # SFT --source llm uses these + templated for the rest
 
 step () { printf '\n========== %s ==========\n' "$1"; }
+run_tier_a_reward () {
+  local module="$1"
+  "$PY" - <<PY
+import config
+config.FAITHFULNESS_METHOD = "lexical"
+import ${module}
+${module}.main()
+PY
+}
 
 # Capture everything to a timestamped log AND show it on screen.
 mkdir -p logs
@@ -37,8 +46,8 @@ echo "Started:     $(date)"
 step "A1  pipeline: generate -> TEI/IOB -> ingest -> oracle vs linguistic"
 "$PY" run_pipeline.py
 step "A2  linguistic reward (per-feature blindness)"; "$PY" linguistic_reward.py
-step "A3  composite reward (faithfulness-gated; good>fab 16/16)"; "$PY" composite_reward.py
-step "A4  synthetic human arm + persona pluralism"; "$PY" human_reward.py
+step "A3  composite reward (Tier A smoke uses lexical faithfulness)"; run_tier_a_reward composite_reward
+step "A4  synthetic human arm + persona pluralism"; run_tier_a_reward human_reward
 
 if [ "$1" != "--train" ]; then
   printf '\nTier A complete.  Add --train for the torch stages (SFT -> GRPO).\n'
