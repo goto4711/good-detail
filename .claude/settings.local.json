@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(env)",
+      "Bash(timeout 30 python -u llm_judge_reward.py --validate --model mistral-small-3.2 --limit 1)",
+      "Bash(timeout 30 python -u -c \"import time; t=time.time\\(\\); print\\('importing gen', flush=True\\); from generate_synthetic_corpus import CASES; print\\(f'gen done {time.time\\(\\)-t:.1f}s', flush=True\\); print\\('importing grpo', flush=True\\); from grpo_smoke_test import _record_block; print\\(f'grpo done {time.time\\(\\)-t:.1f}s', flush=True\\)\")",
+      "Bash(timeout 20 python -u llm_judge_reward.py --validate --model mistral-small-3.2 --limit 1)",
+      "Bash(echo \"---exit:$?---\")",
+      "Read(//tmp/**)",
+      "Bash(timeout 15 python *)",
+      "Bash(timeout 90 python *)",
+      "Bash(timeout 20 python *)",
+      "Bash(timeout 30 python *)",
+      "Bash(timeout 60 python *)"
+    ]
+  }
+}
