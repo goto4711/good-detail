@@ -41,8 +41,9 @@ import hashlib
 import re
 import sys
 import warnings
+import atexit
 
-from config import (FAITHFULNESS_METHOD, NLI_MODEL, NLI_ENTAIL_THRESHOLD,
+from config import (FAITHFULNESS_METHOD, FAITHFULNESS_STRICT, NLI_MODEL, NLI_ENTAIL_THRESHOLD,
                     NLI_CONTRADICT_THRESHOLD, NLI_MAX_PREMISE_CHARS)
 
 try:
@@ -52,6 +53,7 @@ except ImportError:
 
 _CACHE = {}
 _DEBUG = False   # set by `--debug`: print each claim's entailment verdict
+_LLM_FALLBACK = {"calls": 0, "fallbacks": 0, "reported": False}
 STATUS_SCORED = "scored"
 STATUS_VAGUE_ONLY = "vague-only"
 STATUS_UNSCOREABLE_NO_CLAIMS = "unscoreable:no-claims"
@@ -82,6 +84,27 @@ def _warn_unscoreable(status, text, subject="", premises=None):
         RuntimeWarning,
         stacklevel=2,
     )
+
+
+def _report_llm_fallback_summary():
+    if _LLM_FALLBACK["reported"] or _LLM_FALLBACK["calls"] == 0:
+        return
+    _LLM_FALLBACK["reported"] = True
+    print(f"{_LLM_FALLBACK['fallbacks']}/{_LLM_FALLBACK['calls']} faithfulness calls fell back to lexical",
+          file=sys.stderr)
+
+
+atexit.register(_report_llm_fallback_summary)
+
+
+def _faith_llm_fallback(text, case, exc):
+    if FAITHFULNESS_STRICT:
+        raise exc
+    _LLM_FALLBACK["fallbacks"] += 1
+    case_id = case.get("case_id", "?")
+    warnings.warn(f"LLM faithfulness fell back to lexical for case {case_id}: {exc!r}",
+                  RuntimeWarning, stacklevel=2)
+    return _faith_lexical(text, case)
 
 
 def _key(method, case, text):
@@ -317,10 +340,11 @@ def _faith_nli(text, case, return_status=False):
 # ====================================================================== #
 
 def _faith_llm(text, case):
+    _LLM_FALLBACK["calls"] += 1
     try:
         from llm_judge_reward import chat
-    except Exception:
-        return _faith_lexical(text, case)  # graceful fallback
+    except Exception as exc:
+        return _faith_llm_fallback(text, case, exc)
     premise = case_premise_text(case)
     sys_p = ("You verify grounding. Given RECORD facts and a NARRATIVE, count how "
              "many sentences in the narrative assert something NOT supported by the "
@@ -333,8 +357,8 @@ def _faith_llm(text, case):
         d = json.loads(m.group(0))
         unsup, total = int(d["unsupported"]), max(1, int(d["total"]))
         return max(0.0, 1 - unsup / total), unsup
-    except Exception:
-        return _faith_lexical(text, case)
+    except Exception as exc:
+        return _faith_llm_fallback(text, case, exc)
 
 
 # ====================================================================== #

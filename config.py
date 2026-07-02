@@ -56,6 +56,8 @@ W_C, W_FAB, W_SENS = 0.3, 0.5, 1.0  # calibration weight, fabrication penalty, s
 #   "llm"     ask the LLM judge to count unsupported claims — strongest, slowest, fallible
 # Validate / compare with:  python faithfulness.py --method nli --agreement
 FAITHFULNESS_METHOD = "nli"
+FAITHFULNESS_STRICT = False       # when True, any LLM-faithfulness backend / parse failure raises
+                                  # instead of falling back to lexical; leave False for resilient runs
 NLI_MODEL = "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"  # small, local, runs on the A10
 NLI_ENTAIL_THRESHOLD = 0.5        # min entailment prob to count a claim as supported
 NLI_CONTRADICT_THRESHOLD = 0.5    # min contradiction prob to count a claim as fabricated
