@@ -29,7 +29,7 @@ import sys
 try:
     from ingest import load_corpus, record_block
     from config import INSTRUCTION
-    from faithfulness import nli_faithfulness
+    from faithfulness import is_unscoreable_status, nli_faithfulness
     from linguistic_reward import linguistic_reward
     from realdata_generate import retrieve, attested_index, _composite, _redact, _BANNER
     import llm_judge_reward as J
@@ -37,6 +37,12 @@ except ImportError as e:
     sys.exit(f"Run from the project folder: {e}")
 
 REWARDS = ["composite", "linguistic"]   # + "judge" when --judge
+
+
+def _fmt_faith(row):
+    if row.get("faith_status") and row["faith_status"] != "scored":
+        return row["faith_status"].upper()
+    return f"{row['F']:.2f}"
 
 
 def _gen(model, messages, k, temperature, max_tokens):
@@ -119,9 +125,11 @@ def main():
         scored = []
         for t in cands:
             premises = retrieve(rec.source_text, focal + " " + t, args.premise_sents)
-            F, unsup = nli_faithfulness(t, premises, subject=focal, grounded_toks=att_t, grounded_years=att_y)
+            F, unsup, faith_status = nli_faithfulness(
+                t, premises, subject=focal, grounded_toks=att_t, grounded_years=att_y,
+                return_status=True)
             row = {"text": t, "F": F, "unsup": unsup, "composite": _composite(t, F, unsup),
-                   "linguistic": linguistic_reward(t)}
+                   "linguistic": linguistic_reward(t), "faith_status": faith_status}
             if args.judge:
                 row["judge"] = _judge_score(record, t, args.judge_backend, judge_model)
             scored.append(row)
@@ -131,12 +139,23 @@ def main():
         if args.gate:
             # the DEPLOYABLE pick: keep only grounded candidates (unsup <= gate_unsup),
             # then choose the richest (highest linguistic). Fall back to least-bad (max F).
-            survivors = [i for i, s in enumerate(scored) if s["unsup"] <= args.gate_unsup]
+            survivors = []
+            filtered = []
+            for i, s in enumerate(scored):
+                if is_unscoreable_status(s["faith_status"]):
+                    filtered.append((i, f"filtered: {s['faith_status']}"))
+                    continue
+                if s["unsup"] > args.gate_unsup:
+                    filtered.append((i, f"filtered: unsupported specifics {s['unsup']} > {args.gate_unsup}"))
+                    continue
+                survivors.append(i)
             gkey = f"grounded-gate(unsup<={args.gate_unsup})"
             picks[gkey] = (max(survivors, key=lambda i: scored[i]["linguistic"]) if survivors
                            else max(range(len(scored)), key=lambda i: scored[i]["F"]))
             order.append(gkey)
             print(f"  ({len(survivors)}/{args.k} candidates passed the faithfulness gate)")
+            for i, reason in filtered:
+                print(f"      candidate #{i} {reason}")
         rewards_iter = order
         unit_disp = focal if args.no_redact else "[unit]"
         print(f"=== {rec.id} — {unit_disp}  ({rec.title[:55]}…)  [{args.k} candidates] ===")
@@ -150,7 +169,7 @@ def main():
             print(f"\n  ── {r.upper()} reward picks candidate {tag} ──")
             print(f"  {shown}")
             js = f"  judge={row['judge']:+.2f}" if args.judge else ""
-            print(f"    [F={row['F']:.2f} unsup={row['unsup']}  composite={row['composite']:+.2f}  "
+            print(f"    [F={_fmt_faith(row)} unsup={row['unsup']}  composite={row['composite']:+.2f}  "
                   f"linguistic={row['linguistic']:.2f}{js}]")
         distinct = len(set(picks[r] for r in rewards))   # divergence among the REWARDS (not the gate)
         if distinct > 1:

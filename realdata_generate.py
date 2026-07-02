@@ -32,13 +32,14 @@ import argparse
 import os
 import re
 import sys
+import warnings
 
 try:
     from ingest import load_corpus, record_block
     from grpo_train import INSTRUCTION, chat_prompt
     from linguistic_reward import features, linguistic_reward, WORD_RE
     from composite_reward import sensationalism
-    from faithfulness import nli_faithfulness
+    from faithfulness import is_unscoreable_status, nli_faithfulness
     from config import GAMMA, W_C, W_FAB, W_SENS
 except ImportError as e:
     sys.exit(f"Run from the project folder: {e}")
@@ -177,8 +178,11 @@ def main():
 
         att_t, att_y = attested_index(rec, with_relations=wr)
         premises = retrieve(rec.source_text, focal + " " + text, args.premise_sents)
-        F, unsup = nli_faithfulness(text, premises, subject=focal,
-                                    grounded_toks=att_t, grounded_years=att_y)
+        F, unsup, faith_status = nli_faithfulness(
+            text, premises, subject=focal, grounded_toks=att_t, grounded_years=att_y,
+            return_status=True)
+        if is_unscoreable_status(faith_status):
+            warnings.warn(f"{rec.id}: faithfulness unscoreable ({faith_status})", RuntimeWarning, stacklevel=1)
         ling = linguistic_reward(text)
         comp = _composite(text, F, unsup)
         jval = judge(record, text) if judge else None
@@ -189,9 +193,10 @@ def main():
         if jval is not None:
             agg["judge"].append(jval)
 
-        score_line = f"    [F={F:.2f} unsup={unsup}  composite={comp:+.2f}  linguistic={ling:.2f}{js}]"
+        fdisp = faith_status.upper() if faith_status != "scored" else f"{F:.2f}"
+        score_line = f"    [F={fdisp} unsup={unsup}  composite={comp:+.2f}  linguistic={ling:.2f}{js}]"
         if args.summary:
-            print(f"  {rec.id}: F={F:.2f} unsup={unsup} comp={comp:+.2f} ling={ling:.2f}{js}")
+            print(f"  {rec.id}: F={fdisp} unsup={unsup} comp={comp:+.2f} ling={ling:.2f}{js}")
         else:
             unit_disp = focal if args.no_redact else "[unit]"
             print(f"=== {rec.id}  —  {unit_disp}  ({rec.title[:55]}…) ===")

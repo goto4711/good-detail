@@ -40,6 +40,7 @@ so the NLI/LLM cost is paid once per unique completion inside the RL loop.
 import hashlib
 import re
 import sys
+import warnings
 
 from config import (FAITHFULNESS_METHOD, NLI_MODEL, NLI_ENTAIL_THRESHOLD,
                     NLI_CONTRADICT_THRESHOLD, NLI_MAX_PREMISE_CHARS)
@@ -51,6 +52,36 @@ except ImportError:
 
 _CACHE = {}
 _DEBUG = False   # set by `--debug`: print each claim's entailment verdict
+STATUS_SCORED = "scored"
+STATUS_VAGUE_ONLY = "vague-only"
+STATUS_UNSCOREABLE_NO_CLAIMS = "unscoreable:no-claims"
+STATUS_UNSCOREABLE_NO_PREMISES = "unscoreable:no-premises"
+STATUS_UNSCOREABLE_NO_CLAIMS_OR_PREMISES = "unscoreable:no-claims-or-premises"
+
+
+def is_unscoreable_status(status):
+    return status.startswith("unscoreable:")
+
+
+def _result(F, unsupported, status, return_status):
+    return (F, unsupported, status) if return_status else (F, unsupported)
+
+
+def _warn_unscoreable(status, text, subject="", premises=None):
+    why = {
+        STATUS_UNSCOREABLE_NO_CLAIMS: "no claims survived split_claims()",
+        STATUS_UNSCOREABLE_NO_PREMISES: "no premises were available",
+        STATUS_UNSCOREABLE_NO_CLAIMS_OR_PREMISES: "no claims survived split_claims() and no premises were available",
+    }.get(status, status)
+    preview = " ".join(text.split())[:120]
+    extra = f" subject={subject!r}" if subject else ""
+    if premises is not None:
+        extra += f" premises={len(premises)}"
+    warnings.warn(
+        f"nli_faithfulness is unscoreable ({why}); returning vacuous F=1.0.{extra} text={preview!r}",
+        RuntimeWarning,
+        stacklevel=2,
+    )
 
 
 def _key(method, case, text):
@@ -224,7 +255,8 @@ def _has_invented_specific(claim, toks, years):
     return any(y not in years for y in re.findall(r"\b\d{4}\b", claim))
 
 
-def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_years=None):
+def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_years=None,
+                     return_status=False):
     """Core NLI grounding, reusable for ANY premise set (the synthetic fact base
     OR real retrieved source sentences). Per claim, max-over-premises entailment,
     three ways:
@@ -234,10 +266,19 @@ def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_ye
                                          attested set `grounded_toks/years`)
        neutral + vague                -> ignored (bland, not false)
     F = supported / (supported + fabrications); vague-only text is vacuously
-    faithful (F=1). Pass grounded_toks=None to skip the invented-specific check."""
+    faithful (F=1). Pass grounded_toks=None to skip the invented-specific check.
+    With return_status=True, also return a status string so callers can detect an
+    unscoreable vacuous case without breaking the default 2-tuple API."""
     claims = split_claims(text, subject=subject)
     if not claims or not premises:
-        return 1.0, 0
+        if not claims and not premises:
+            status = STATUS_UNSCOREABLE_NO_CLAIMS_OR_PREMISES
+        elif not claims:
+            status = STATUS_UNSCOREABLE_NO_CLAIMS
+        else:
+            status = STATUS_UNSCOREABLE_NO_PREMISES
+        _warn_unscoreable(status, text, subject=subject, premises=premises)
+        return _result(1.0, 0, status, return_status)
     pipe = _load_nli()
     el, cl = _NLI["ent_label"], _NLI["con_label"]
     pairs = [{"text": p, "text_pair": c} for c in claims for p in premises]
@@ -259,14 +300,16 @@ def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_ye
         if _DEBUG:
             print(f"      [{tag} e={ent:.2f} c={con:.2f}] {c}")
     denom = supported + fabricated
-    return (supported / denom if denom else 1.0), fabricated
+    status = STATUS_SCORED if denom else STATUS_VAGUE_ONLY
+    return _result((supported / denom if denom else 1.0), fabricated, status, return_status)
 
 
-def _faith_nli(text, case):
+def _faith_nli(text, case, return_status=False):
     """Synthetic path: premises = the fact base; attested set = grounded_index."""
     subject = case["entities"][case["focal"]]["name"]
     toks, years = grounded_index(case)
-    return nli_faithfulness(text, case_premise_facts(case), subject, toks, years)
+    return nli_faithfulness(text, case_premise_facts(case), subject, toks, years,
+                            return_status=return_status)
 
 
 # ====================================================================== #
@@ -301,12 +344,17 @@ def _faith_llm(text, case):
 _METHODS = {"lexical": _faith_lexical, "nli": _faith_nli, "llm": _faith_llm}
 
 
-def faithfulness(text, case, method=None):
+def faithfulness(text, case, method=None, return_status=False):
     """(F in [0,1], #unsupported). Method from arg or config.FAITHFULNESS_METHOD."""
     method = method or FAITHFULNESS_METHOD
     fn = _METHODS.get(method)
     if fn is None:
         raise ValueError(f"Unknown FAITHFULNESS_METHOD {method!r}; use {list(_METHODS)}")
+    if return_status:
+        if method == "nli":
+            return fn(text, case, return_status=True)
+        F, unsupported = faithfulness(text, case, method=method)
+        return F, unsupported, STATUS_SCORED
     k = _key(method, case, text)
     if k not in _CACHE:
         _CACHE[k] = fn(text, case)
