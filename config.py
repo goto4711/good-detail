@@ -61,6 +61,8 @@ FAITHFULNESS_STRICT = False       # when True, any LLM-faithfulness backend / pa
 NLI_MODEL = "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"  # small, local, runs on the A10
 NLI_ENTAIL_THRESHOLD = 0.5        # min entailment prob to count a claim as supported
 NLI_CONTRADICT_THRESHOLD = 0.5    # min contradiction prob to count a claim as fabricated
+NLI_CONTRADICTION_VETO = False    # when True, any contradiction above threshold vetoes entailment
+                                  # from another premise; keep False to preserve published synthetic numbers
 NLI_MAX_PREMISE_CHARS = 2000      # truncate the record-as-premise to this many chars
 
 # Source-passage RETRIEVAL (the NLI premise / prompt excerpt). The overnight run

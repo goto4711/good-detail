@@ -43,6 +43,7 @@ import sys
 import warnings
 import atexit
 
+import config
 from config import (FAITHFULNESS_METHOD, FAITHFULNESS_STRICT, NLI_MODEL, NLI_ENTAIL_THRESHOLD,
                     NLI_CONTRADICT_THRESHOLD, NLI_MAX_PREMISE_CHARS)
 
@@ -312,7 +313,9 @@ def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_ye
         chunk = results[i * nf:(i + 1) * nf]
         ent = max(_label_score(sc, el) for sc in chunk)
         con = max(_label_score(sc, cl) for sc in chunk)
-        if ent >= NLI_ENTAIL_THRESHOLD:
+        if config.NLI_CONTRADICTION_VETO and con >= NLI_CONTRADICT_THRESHOLD:
+            tag, fabricated = "CONTR", fabricated + 1
+        elif ent >= NLI_ENTAIL_THRESHOLD:
             tag, supported = "OK   ", supported + 1
         elif con >= NLI_CONTRADICT_THRESHOLD:
             tag, fabricated = "CONTR", fabricated + 1
