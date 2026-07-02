@@ -48,6 +48,8 @@ except ImportError:
 HERE = Path(__file__).parent
 TOKEN_RE = re.compile(r"\w+|[^\w\s]", re.UNICODE)
 WORD_RE = re.compile(r"[A-Za-zÀ-ÿ]+")
+TITLECASE_RE = re.compile(r"^[A-ZÀ-Þ][a-zà-ÿ]")
+ALL_CAPS_RE = re.compile(r"^[A-ZÀ-Þ]{1,4}$")
 
 # Lexicons (stopwords, hedges, over-claim, concreteness) live in config.py
 from config import STOPWORDS, HEDGES, OVERCLAIM, CONCRETENESS_STUB
@@ -91,7 +93,7 @@ def proper_noun_density(text):
         toks = s.split()
         for i, t in enumerate(toks):
             tt = t.strip(",.;:()[]'\"")
-            if i > 0 and re.match(r"^[A-Z]", tt):
+            if i > 0 and (TITLECASE_RE.match(tt) or ALL_CAPS_RE.fullmatch(tt)):
                 propers += 1
     return propers / math.sqrt(max(1, len(text.split())))
 
