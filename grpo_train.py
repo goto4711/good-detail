@@ -47,6 +47,7 @@ except ImportError:
 
 # the open-book writing instruction + base model live in config.py
 from config import INSTRUCTION, DEFAULT_MODEL
+from guards import anti_copy_penalty, format_guard_penalty, length_guard_penalty
 
 
 def _record_block(case):
@@ -201,15 +202,8 @@ REWARDS = {"linguistic": reward_linguistic, "composite": reward_composite,
 # terminating micro-narratives. It's a SEPARATE reward function that GRPO sums
 # with the main one, so its effect is logged separately as
 # rewards/length_guard/mean — and you can disable it with --no_length_guard.
-from config import TARGET_WORDS, W_LEN   # length-guard dials in config.py
-
-
 def length_guard(completions, **kwargs):
-    out = []
-    for t in _texts(completions):
-        n = len(t.split())
-        out.append(-W_LEN * max(0.0, (n - TARGET_WORDS) / TARGET_WORDS))
-    return out
+    return [length_guard_penalty(t) for t in _texts(completions)]
 
 
 # --- anti-copy guard ------------------------------------------------------
@@ -220,11 +214,6 @@ def length_guard(completions, **kwargs):
 # Needs each completion's record, rebuilt from case_id. Separate reward stream
 # (logged as rewards/anti_copy_guard/mean); disable with --no_anti_copy.
 CASE_BY_ID = {c["case_id"]: c for c in CASES}
-from config import ANTICOPY_N, ANTICOPY_TOL, W_COPY   # anti-copy dials in config.py
-
-
-def _ngrams(words, n):
-    return {tuple(words[i:i + n]) for i in range(len(words) - n + 1)} if len(words) >= n else set()
 
 
 def anti_copy_guard(completions, case_id=None, **kwargs):
@@ -233,19 +222,13 @@ def anti_copy_guard(completions, case_id=None, **kwargs):
         return [0.0 for _ in texts]
     out = []
     for t, cid in zip(texts, case_id):
-        comp = _ngrams(t.lower().split(), ANTICOPY_N)
-        if not comp:
-            out.append(0.0)
-            continue
         if cid in _REAL_RECORDS:
             from ingest import record_block as _rb
             r = _REAL_RECORDS[cid]
             rec_text = _rb(r) + " " + r.source_text
         else:
             rec_text = _record_block(CASE_BY_ID[cid])
-        rec = _ngrams(rec_text.lower().split(), ANTICOPY_N)
-        overlap = len(comp & rec) / len(comp)
-        out.append(-W_COPY * max(0.0, overlap - ANTICOPY_TOL))
+        out.append(anti_copy_penalty(t, rec_text))
     return out
 
 
@@ -259,22 +242,8 @@ def anti_copy_guard(completions, case_id=None, **kwargs):
 # General (not synthetic-specific): the same dump-the-record temptation is even
 # stronger on real EHRI records. Logged as rewards/format_guard/mean; disable
 # with --no_format_guard.
-from config import W_FORMAT
-_SCAFFOLD = re.compile(
-    r"(?im)^\s*(focal|entities|events|sources|notes|record)\s*:"   # section headers
-    r"|\bsrc\s+s?\d"                                              # "src S1" provenance
-    r"|\[\s*\d{3,4}\s*,"                                          # "[1938, …]" date-source brackets
-    r"|^\s*[-*•]\s+",                                             # bullet list lines
-    re.M)
-
-
 def format_guard(completions, **kwargs):
-    out = []
-    for t in _texts(completions):
-        hits = len(_SCAFFOLD.findall(t))
-        extra_newlines = max(0, t.count("\n") - 1)   # a micro-narrative is ~1 paragraph
-        out.append(-W_FORMAT * (hits + 0.5 * extra_newlines))
-    return out
+    return [format_guard_penalty(t) for t in _texts(completions)]
 
 
 # ----------------------------------------------------------------------

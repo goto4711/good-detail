@@ -16,6 +16,11 @@ it at whatever the historians want to see — the uva proxy's largest model, a
 frontier API, or a local vLLM serving the newest open model. Reward functions are
 model-agnostic, so the same lens works over any of them.
 
+Selection-time guard thresholds and weights live in `config.py`. By default the
+demo filters record-dump / verbatim-copy exploits before ranking and applies the
+shared length penalty as a soft reranking term; use `--no_guards` to restore the
+old raw-reward ranking.
+
 SAFEGUARDS: tiny N, focal name redacted, every narrative stamped UNVERIFIED.
 A methods demonstration, never a historical source.
 
@@ -30,6 +35,9 @@ try:
     from ingest import load_corpus, record_block
     from config import INSTRUCTION
     from faithfulness import is_unscoreable_status, nli_faithfulness
+    from guards import (anti_copy_exceeds_tolerance, anti_copy_overlap,
+                        format_guard_hits, format_guard_violation,
+                        length_guard_penalty)
     from linguistic_reward import linguistic_reward
     from realdata_generate import retrieve, attested_index, _composite, _redact, _BANNER
     import llm_judge_reward as J
@@ -89,6 +97,8 @@ def main():
     ap.add_argument("--judge", action="store_true", help="add the LLM-judge reward as a third selector")
     ap.add_argument("--judge_backend", default="gemini")
     ap.add_argument("--judge_model", default=None)
+    ap.add_argument("--no_guards", action="store_true",
+                    help="restore the old raw-reward ranking (skip selection-time guards)")
     ap.add_argument("--save", default=None,
                     help="dump the scored candidate sets to JSON (workshop input for make_annotation_sheet.py)")
     args = ap.parse_args()
@@ -128,20 +138,48 @@ def main():
             F, unsup, faith_status = nli_faithfulness(
                 t, premises, subject=focal, grounded_toks=att_t, grounded_years=att_y,
                 return_status=True)
+            len_pen = length_guard_penalty(t)
+            guard_reasons = []
+            if not args.no_guards:
+                if format_guard_violation(t):
+                    guard_reasons.append(f"format guard hits={format_guard_hits(t):.1f}")
+                overlap = anti_copy_overlap(t, record)
+                if anti_copy_exceeds_tolerance(t, record):
+                    guard_reasons.append(f"anti-copy overlap={overlap:.2f}")
+            else:
+                overlap = 0.0
             row = {"text": t, "F": F, "unsup": unsup, "composite": _composite(t, F, unsup),
-                   "linguistic": linguistic_reward(t), "faith_status": faith_status}
+                   "linguistic": linguistic_reward(t), "faith_status": faith_status,
+                   "length_guard": len_pen, "guard_filtered": bool(guard_reasons),
+                   "guard_reason": "; ".join(guard_reasons), "anti_copy_overlap": overlap}
             if args.judge:
                 row["judge"] = _judge_score(record, t, args.judge_backend, judge_model)
             scored.append(row)
 
-        picks = {r: max(range(len(scored)), key=lambda i: scored[i][r]) for r in rewards}
+        def eligible(i):
+            return args.no_guards or not scored[i]["guard_filtered"]
+
+        def select_reward(reward_name):
+            pool = [i for i in range(len(scored)) if eligible(i)]
+            if not pool:
+                return None
+            return max(pool, key=lambda i: scored[i][reward_name] + scored[i]["length_guard"])
+
+        picks = {r: select_reward(r) for r in rewards}
         order = list(rewards)
+        if not args.no_guards and not args.gate:
+            for i, row in enumerate(scored):
+                if row["guard_filtered"]:
+                    print(f"      candidate #{i} filtered: {row['guard_reason']}")
         if args.gate:
             # the DEPLOYABLE pick: keep only grounded candidates (unsup <= gate_unsup),
             # then choose the richest (highest linguistic). Fall back to least-bad (max F).
             survivors = []
             filtered = []
             for i, s in enumerate(scored):
+                if not eligible(i):
+                    filtered.append((i, f"filtered: {s['guard_reason']}"))
+                    continue
                 if is_unscoreable_status(s["faith_status"]):
                     filtered.append((i, f"filtered: {s['faith_status']}"))
                     continue
@@ -150,10 +188,10 @@ def main():
                     continue
                 survivors.append(i)
             gkey = f"grounded-gate(unsup<={args.gate_unsup})"
-            picks[gkey] = (max(survivors, key=lambda i: scored[i]["linguistic"]) if survivors
-                           else max(range(len(scored)), key=lambda i: scored[i]["F"]))
+            picks[gkey] = (max(survivors, key=lambda i: scored[i]["linguistic"] + scored[i]["length_guard"]) if survivors
+                           else None)
             order.append(gkey)
-            print(f"  ({len(survivors)}/{args.k} candidates passed the faithfulness gate)")
+            print(f"  ({len(survivors)}/{len(cands)} candidates passed the faithfulness gate)")
             for i, reason in filtered:
                 print(f"      candidate #{i} {reason}")
         rewards_iter = order
@@ -162,6 +200,10 @@ def main():
         seen = {}
         for r in rewards_iter:
             i = picks[r]
+            if i is None:
+                print(f"\n  ── {r.upper()} reward pick unavailable ──")
+                print("  no candidate survived the active selection filters")
+                continue
             row = scored[i]
             tag = f"#{i}" + (f" (= {seen[i]})" if i in seen else "")
             seen.setdefault(i, r)
@@ -170,8 +212,8 @@ def main():
             print(f"  {shown}")
             js = f"  judge={row['judge']:+.2f}" if args.judge else ""
             print(f"    [F={_fmt_faith(row)} unsup={row['unsup']}  composite={row['composite']:+.2f}  "
-                  f"linguistic={row['linguistic']:.2f}{js}]")
-        distinct = len(set(picks[r] for r in rewards))   # divergence among the REWARDS (not the gate)
+                  f"linguistic={row['linguistic']:.2f}  length_guard={row['length_guard']:+.2f}{js}]")
+        distinct = len({picks[r] for r in rewards if picks[r] is not None})   # divergence among the REWARDS (not the gate)
         if distinct > 1:
             diverged += 1
         print(f"\n  -> the rewards chose {distinct} DIFFERENT candidate(s) "
@@ -190,7 +232,8 @@ def main():
                     {"i": i,
                      "text": s["text"] if args.no_redact else _redact(s["text"], focal),
                      "F": s["F"], "unsup": s["unsup"], "composite": s["composite"],
-                     "linguistic": s["linguistic"],
+                     "linguistic": s["linguistic"], "length_guard": s["length_guard"],
+                     "guard_filtered": s["guard_filtered"], "guard_reason": s["guard_reason"],
                      **({"judge": s["judge"]} if args.judge else {})}
                     for i, s in enumerate(scored)],
             })
