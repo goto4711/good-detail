@@ -53,6 +53,7 @@ except ImportError:
     sys.exit("Run from the project folder (needs linguistic_reward.py).")
 
 _CACHE = {}
+_NLI_CACHE = {}
 _DEBUG = False   # set by `--debug`: print each claim's entailment verdict
 _LLM_FALLBACK = {"calls": 0, "fallbacks": 0, "reported": False}
 STATUS_SCORED = "scored"
@@ -109,7 +110,41 @@ def _faith_llm_fallback(text, case, exc):
 
 
 def _key(method, case, text):
-    return (method, case.get("case_id", "?"), hashlib.sha1(text.encode("utf-8")).hexdigest())
+    if isinstance(case, dict):
+        case_id = case.get("case_id")
+        if case_id:
+            case_key = case_id
+        else:
+            case_key = "hash:" + hashlib.sha1(case_premise_text(case).encode("utf-8")).hexdigest()
+    else:
+        case_id = getattr(case, "case_id", None)
+        if case_id:
+            case_key = case_id
+        else:
+            blob = getattr(case, "source_text", None) or repr(case)
+            case_key = "hash:" + hashlib.sha1(str(blob).encode("utf-8")).hexdigest()
+    return (method, case_key, hashlib.sha1(text.encode("utf-8")).hexdigest())
+
+
+def _hash_items(items):
+    h = hashlib.sha1()
+    for item in items:
+        h.update(str(item).encode("utf-8"))
+        h.update(b"\0")
+    return h.hexdigest()
+
+
+def _nli_key(text, premises, subject, grounded_toks=None, grounded_years=None):
+    return (
+        _hash_items(tuple(premises)),
+        subject,
+        hashlib.sha1(text.encode("utf-8")).hexdigest(),
+        NLI_ENTAIL_THRESHOLD,
+        NLI_CONTRADICT_THRESHOLD,
+        config.NLI_CONTRADICTION_VETO,
+        _hash_items(sorted(grounded_toks)) if grounded_toks is not None else None,
+        _hash_items(sorted(grounded_years or set())) if grounded_toks is not None else None,
+    )
 
 
 # ====================================================================== #
@@ -303,6 +338,10 @@ def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_ye
             status = STATUS_UNSCOREABLE_NO_PREMISES
         _warn_unscoreable(status, text, subject=subject, premises=premises)
         return _result(1.0, 0, status, return_status)
+    ck = _nli_key(text, premises, subject, grounded_toks, grounded_years)
+    if ck in _NLI_CACHE:
+        F, fabricated, status = _NLI_CACHE[ck]
+        return _result(F, fabricated, status, return_status)
     pipe = _load_nli()
     el, cl = _NLI["ent_label"], _NLI["con_label"]
     pairs = [{"text": p, "text_pair": c} for c in claims for p in premises]
@@ -327,7 +366,9 @@ def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_ye
             print(f"      [{tag} e={ent:.2f} c={con:.2f}] {c}")
     denom = supported + fabricated
     status = STATUS_SCORED if denom else STATUS_VAGUE_ONLY
-    return _result((supported / denom if denom else 1.0), fabricated, status, return_status)
+    F = supported / denom if denom else 1.0
+    _NLI_CACHE[ck] = (F, fabricated, status)
+    return _result(F, fabricated, status, return_status)
 
 
 def _faith_nli(text, case, return_status=False):
