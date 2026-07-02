@@ -29,15 +29,8 @@ flip good > fabricated where the linguistic-only reward failed.
 import math
 import re
 import statistics
-import sys
 
-try:
-    from generate_synthetic_corpus import CASES, REGISTERS, PROFILES, render
-    from linguistic_reward import features, STOPWORDS, WORD_RE
-except ImportError:
-    sys.exit("Run from the project folder (needs generate_synthetic_corpus.py + linguistic_reward.py).")
-
-CASE_BY_ID = {c["case_id"]: c for c in CASES}
+from linguistic_reward import features, STOPWORDS, WORD_RE
 
 # Reward weights + sensational lexicon live in config.py
 from config import SENSATIONAL, SENSATIONAL_EXEMPT_ATTESTED, GAMMA, W_C, W_FAB, W_SENS
@@ -46,6 +39,17 @@ from config import SENSATIONAL, SENSATIONAL_EXEMPT_ATTESTED, GAMMA, W_C, W_FAB, 
 # `composite_reward()` automatically uses whatever config.FAITHFULNESS_METHOD selects.
 from faithfulness import case_premise_text, faithfulness, grounded_index  # noqa: F401
 Q_KEYS = ("proper_noun_density", "number_date_density", "concreteness", "lexical_density")
+
+
+_CASE_BY_ID = None
+
+
+def _case_by_id():
+    global _CASE_BY_ID
+    if _CASE_BY_ID is None:
+        from generate_synthetic_corpus import CASES
+        _CASE_BY_ID = {c["case_id"]: c for c in CASES}
+    return _CASE_BY_ID
 
 
 def _simple_stem(word):
@@ -87,7 +91,7 @@ def composite_reward(text, case, gamma=GAMMA, w_c=W_C, w_fab=W_FAB, w_sens=W_SEN
 
 
 def composite_reward_by_id(text, case_id, **kw):
-    return composite_reward(text, CASE_BY_ID[case_id], **kw)
+    return composite_reward(text, _case_by_id()[case_id], **kw)
 
 
 # ----------------------------------------------------------------------
@@ -95,6 +99,7 @@ def composite_reward_by_id(text, case_id, **kw):
 # ----------------------------------------------------------------------
 
 def main():
+    from generate_synthetic_corpus import CASES, REGISTERS, PROFILES, render
     from linguistic_reward import linguistic_reward
     rows = {p: {"F": [], "unsup": [], "S": [], "ling": [], "comp": []} for p in PROFILES}
     flip_comp = flip_ling = 0   # cells where good > fabricated

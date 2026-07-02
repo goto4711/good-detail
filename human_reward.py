@@ -26,21 +26,24 @@ Run `python human_reward.py` for the two-arm + pluralism report.
 import random
 import re
 import statistics
-import sys
 
-try:
-    from generate_synthetic_corpus import CASES, REGISTERS, PROFILES, render
-    from linguistic_reward import features, linguistic_reward
-    from composite_reward import faithfulness, sensationalism
-except ImportError:
-    sys.exit("Run from the project folder (needs generate_synthetic_corpus.py, "
-             "linguistic_reward.py, composite_reward.py).")
-
-CASE_BY_ID = {c["case_id"]: c for c in CASES}
+from linguistic_reward import features, linguistic_reward
+from composite_reward import faithfulness, sensationalism
 
 # Personas (the pluralism knob) + source-attribution words live in config.py
 from config import SOURCE_WORDS, PERSONAS
 POS_DIMS = ("coverage", "specificity", "grounding", "source", "calibration", "restraint")
+
+
+_CASE_BY_ID = None
+
+
+def _case_by_id():
+    global _CASE_BY_ID
+    if _CASE_BY_ID is None:
+        from generate_synthetic_corpus import CASES
+        _CASE_BY_ID = {c["case_id"]: c for c in CASES}
+    return _CASE_BY_ID
 
 
 def _salient_strings(case):
@@ -81,7 +84,7 @@ def human_reward(text, case, persona="balanced", noise=0.0, rng=None):
 
 
 def human_reward_by_id(text, case_id, persona="balanced", noise=0.0):
-    return human_reward(text, CASE_BY_ID[case_id], persona, noise)
+    return human_reward(text, _case_by_id()[case_id], persona, noise)
 
 
 # ----------------------------------------------------------------------
@@ -89,6 +92,7 @@ def human_reward_by_id(text, case_id, persona="balanced", noise=0.0):
 # ----------------------------------------------------------------------
 
 def main():
+    from generate_synthetic_corpus import CASES, REGISTERS, PROFILES, render
     cells = [(c, r) for c in CASES for r in REGISTERS]
     n = len(cells)
 

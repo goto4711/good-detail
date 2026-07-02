@@ -37,13 +37,7 @@ Features that *catch* fabrication are not culture-blind — useful to know which
 import math
 import re
 import statistics
-import sys
 from pathlib import Path
-
-try:
-    from generate_synthetic_corpus import CASES, REGISTERS, PROFILES, render
-except ImportError:
-    sys.exit("Run from the project folder (needs generate_synthetic_corpus.py).")
 
 HERE = Path(__file__).parent
 TOKEN_RE = re.compile(r"\w+|[^\w\s]", re.UNICODE)
@@ -151,6 +145,8 @@ def linguistic_reward(text, weights=WEIGHTS):
 # ----------------------------------------------------------------------
 
 def main():
+    from generate_synthetic_corpus import CASES, REGISTERS, PROFILES, render
+
     print(f"Concreteness source: {CONCRETENESS_SRC}\n")
     # collect feature values per profile
     vals = {p: {name: [] for name in FEATURES} for p in PROFILES}
