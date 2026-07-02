@@ -63,6 +63,17 @@ NLI_ENTAIL_THRESHOLD = 0.5        # min entailment prob to count a claim as supp
 NLI_CONTRADICT_THRESHOLD = 0.5    # min contradiction prob to count a claim as fabricated
 NLI_CONTRADICTION_VETO = False    # when True, any contradiction above threshold vetoes entailment
                                   # from another premise; keep False to preserve published synthetic numbers
+                                  # ⚠ 2026-07-02: the 15/16-cell debug showed max-contradiction is noisy
+                                  # ACROSS premises (a fully entailed claim carried c=1.00 from a different
+                                  # premise), so True over-fires badly on this grid. A useful veto needs
+                                  # per-premise verdicts (contradiction from the SAME best premise).
+NLI_STRIP_HEDGES = True           # strip hedge adverbs (HEDGES below) from a claim before NLI scoring.
+                                  # Why (2026-07-02, the 15/16 diagnosis): "removed from the register
+                                  # probably in 1940" scored as a c=1.00 CONTRADICTION of the definite
+                                  # premise "…in 1940" — the estimator punished exactly the hedging that
+                                  # calibration rewards. The factual core is what must be entailed; the
+                                  # hedge is calibration's business. The original claim is kept for the
+                                  # invented-specific check and the debug display.
 NLI_MAX_PREMISE_CHARS = 2000      # truncate the record-as-premise to this many chars
 
 # Source-passage RETRIEVAL (the NLI premise / prompt excerpt). The overnight run

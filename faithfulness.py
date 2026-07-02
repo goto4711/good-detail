@@ -142,6 +142,7 @@ def _nli_key(text, premises, subject, grounded_toks=None, grounded_years=None):
         NLI_ENTAIL_THRESHOLD,
         NLI_CONTRADICT_THRESHOLD,
         config.NLI_CONTRADICTION_VETO,
+        config.NLI_STRIP_HEDGES,
         _hash_items(sorted(grounded_toks)) if grounded_toks is not None else None,
         _hash_items(sorted(grounded_years or set())) if grounded_toks is not None else None,
     )
@@ -321,6 +322,25 @@ def _has_invented_specific(claim, toks, years):
     return any(y not in years for y in re.findall(r"\b\d{4}\b", claim))
 
 
+_HEDGE_RE = None
+
+
+def _strip_hedges(claim):
+    """Remove hedge adverbs (config.HEDGES) before NLI scoring. The factual core is
+    what must be entailed; the hedge is the calibration feature's business. Without
+    this, 'removed from the register probably in 1940' scores as a c=1.00
+    CONTRADICTION of the definite premise '…in 1940' (the 2026-07-02 15/16-cell
+    diagnosis) — penalising exactly the hedging the project rewards. The original
+    claim is still used for the invented-specific check and the debug display."""
+    global _HEDGE_RE
+    if _HEDGE_RE is None:
+        words = "|".join(sorted(config.HEDGES, key=len, reverse=True))
+        _HEDGE_RE = re.compile(rf"\b({words})\b[ ,]*", re.I)
+    s = _HEDGE_RE.sub("", claim)
+    s = re.sub(r"\s{2,}", " ", s).strip(" ,")
+    return s if len(s.split()) >= 3 else claim   # never strip a claim to nothing
+
+
 def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_years=None,
                      return_status=False):
     """Core NLI grounding, reusable for ANY premise set (the synthetic fact base
@@ -351,7 +371,10 @@ def nli_faithfulness(text, premises, subject="", grounded_toks=None, grounded_ye
         return _result(F, fabricated, status, return_status)
     pipe = _load_nli()
     el, cl = _NLI["ent_label"], _NLI["con_label"]
-    pairs = [{"text": p, "text_pair": c} for c in claims for p in premises]
+    # Score the hedge-stripped factual core (config.NLI_STRIP_HEDGES); keep the
+    # original claims for the invented-specific check and the debug display.
+    scored = [_strip_hedges(c) for c in claims] if config.NLI_STRIP_HEDGES else claims
+    pairs = [{"text": p, "text_pair": c} for c in scored for p in premises]
     results = pipe(pairs, truncation=True, batch_size=32)
     nf = len(premises)
     supported = fabricated = 0
