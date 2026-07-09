@@ -21,31 +21,7 @@ how much they care about whether a vivid specific is actually *true* (situated /
 grounded) versus merely *present and well-formed* (culture-blind / surface).
 
 
-## 0. The shared substrate: a synthetic fact base and its oracle
 
-Every reward is evaluated against the same synthetic corpus. Each record is a
-**structured fact base** we author by hand: entities (people, places,
-organisations) with attributes, events with dates and a `certainty` flag
-(`attested` / `probable` / `uncertain`), per-fact source grounding, a `salience`
-rank, and a `sensitivity` flag. From one record we render three *quality
-profiles* of the same micro-narrative:
-
-- **good** — specific, grounded, source-aware, appropriately hedged;
-- **flattened** — bland and vague but *not false* (it simply says little);
-- **fabricated** — fluent and vivid but inventing specifics not in the record
-  (false names, places, dates, and dramatised events).
-
-Because we *own* the facts, we have an **oracle**: an exact lookup that knows
-which specifics are real. The oracle is the synthetic-phase ground truth and is
-not itself one of the trainable rewards — it is the yardstick the rewards are
-measured against. On real corpora the oracle is replaced by human judgement and
-by retrieval against source passages; the synthetic phase exists precisely to
-rehearse the whole apparatus where ground truth is free and unambiguous.
-
-The distinction between **flattened** and **fabricated** is the heart of the
-design. A reward that cannot tell vivid-and-false from bland-and-honest is a
-reward that will teach a model to hallucinate confidently. Several of the
-rewards below are built specifically to expose, or to fix, that failure.
 
 
 ## 1. Linguistic reward — the culture-blind surface arm
